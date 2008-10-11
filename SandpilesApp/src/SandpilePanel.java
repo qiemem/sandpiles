@@ -32,19 +32,21 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	public static final int MAKE_GRID_STATE = 8;
 	
 	private boolean repaint = true;
+	private boolean labels = true;
+	private boolean color = true;
 	
     private SandpileGraph sg;
     
     static final int VERT_RADIUS = 10;
-    static final Color[] SAND_COLOR = {new Color(0,0,0) , new Color(50,50,50), new Color(100,100,100), new Color(150,150,150), new Color(200,200,200), new Color(225,225,225), new Color(250,250,250)};
+    static final Color[] SAND_COLOR = {Color.gray ,  Color.blue, Color.cyan ,Color.green, Color.red, Color.orange, Color.yellow};
+	static final Color[] SAND_MONOCHROME = {new Color(25,25,25) , new Color(50,50,50), new Color(100,100,100), new Color(150,150,150), new Color(200,200,200), new Color(225,225,225), new Color(255,255,255)};
+	
     
     Vector<Integer[]> vertexData;
     Vector<Integer[]> edges;
     
-    int selectedVertex;
+    private int selectedVertex;
 	
-	int gridRows = 20;
-	int gridCols = 20;
 	
 	public SandpilePanel() {
 		initWithSandpileGraph(new SandpileGraph());
@@ -153,6 +155,17 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	
 	public void setRepaint(boolean val) {
 		repaint = val;
+		repaint();
+	}
+	
+	public void setColor(boolean val) {
+		color = val;
+		repaint();
+	}
+	
+	public void setLabels(boolean val) {
+		labels = val;
+		repaint();
 	}
     
     public void actionPerformed( ActionEvent evt) {
@@ -181,41 +194,34 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
             g.setColor(Color.white);
             g.drawLine(pos1[0], pos1[1], pos2[0], pos2[1]);
             g.setColor(Color.pink);
-            g.drawString(String.valueOf(e[2]), (int)(pos1[0]+0.8*(pos2[0]-pos1[0])), (int)(pos1[1]+0.8*(pos2[1] - pos1[1])));
+			if(labels)
+				g.drawString(String.valueOf(e[2]), (int)(pos1[0]+0.8*(pos2[0]-pos1[0])), (int)(pos1[1]+0.8*(pos2[1] - pos1[1])));
             
         }
         for(int i = 0; i<vertexData.size(); i++) {
+			
             Integer[] v = vertexData.get(i);
+			int radius = VERT_RADIUS;
+			if(sg.degree(i)>0 && sg.degree(i)>v[2])
+				radius = (int)(((float)v[2])/sg.degree(i) * VERT_RADIUS);
             int colorNum = Math.max(0,Math.min(v[2],SAND_COLOR.length-1));
-            g.setColor(SAND_COLOR[colorNum]);
+			if(color){
+				g.setColor(SAND_COLOR[colorNum]);
+			}else{
+				g.setColor(SAND_MONOCHROME[colorNum]);
+			}
 			//g.setColor(new Color(+64));
-            g.fillOval(v[0]-VERT_RADIUS, v[1]-VERT_RADIUS, VERT_RADIUS*2, VERT_RADIUS*2);
+            g.fillOval(v[0]-radius, v[1]-radius, radius*2, radius*2);
             if(i==selectedVertex){
                 g.setColor(Color.cyan);
                 g.drawOval(v[0]-VERT_RADIUS, v[1]-VERT_RADIUS, VERT_RADIUS*2, VERT_RADIUS*2);
             }
             g.setColor(Color.black);
-            g.drawString(String.valueOf(v[2]), v[0]-VERT_RADIUS/2, v[1]+VERT_RADIUS/2);
+			if(labels)
+				g.drawString(String.valueOf(v[2]), v[0]-VERT_RADIUS/2, v[1]+VERT_RADIUS/2);
         }
         
     }
-	
-	public void addVertMouseListener( MouseEvent evt) {
-		int x = evt.getX();
-        int y = evt.getY();
-        int touchVert = touchingVertex(x,y);
-		if(touchVert<0){
-	        if(selectedVertex>=0) {
-			    selectedVertex = -1;
-            }else{
-				//System.out.println("Adding vertex "+x+" "+y);
-				addVertex(x,y);
-            }
-        }else{
-			selectedVertex = touchVert;
-		}
-		
-	}
 	
 	public void addVertexControl(int x, int y) {
 		int touchVert = touchingVertex(x,y);
@@ -231,18 +237,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		}
 	}
 	
-	public void delVertMouseListener( MouseEvent evt) {
-		int x = evt.getX();
-        int y = evt.getY();
-        int touchVert = touchingVertex(x,y);
-		if(touchVert>=0){
-			//System.out.println("Del vertex "+x+" "+y);
-			delVertex(touchVert);
-		}else{
-			selectedVertex = -1;
-		}
-	}
-	
 	public void delVertexControl(int x, int y) {
 		int touchVert = touchingVertex(x,y);
 		if(touchVert>=0){
@@ -252,21 +246,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 			selectedVertex = -1;
 		}
 	
-	}
-	
-	public void addEdgeMouseListener( MouseEvent evt) {
-		int x = evt.getX();
-        int y = evt.getY();
-        int touchVert = touchingVertex(x,y);
-		if(touchVert>=0) {
-			if(selectedVertex<0) {
-				selectedVertex = touchVert;
-			}else if(touchVert!=selectedVertex){
-				addEdge(selectedVertex, touchVert);
-			}
-		}else{
-			selectedVertex=-1;
-		}
 	}
 	
 	public void addEdgeControl(int x, int y, int weight) {
@@ -279,21 +258,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 			}
 		}else{
 			selectedVertex=-1;
-		}
-	}
-	
-	public void delEdgeMouseListener( MouseEvent evt) {
-		int x = evt.getX();
-        int y = evt.getY();
-        int touchVert = touchingVertex(x,y);
-		if(touchVert>=0) {
-			if(selectedVertex<0) {
-				selectedVertex = touchVert;
-			}else if(touchVert!=selectedVertex){
-				delEdge(selectedVertex, touchVert);
-			}
-		}else{
-			selectedVertex = -1;
 		}
 	}
 	
@@ -310,20 +274,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		}
 	}
 	
-	public void addUndiEdgeMouseListener(MouseEvent evt) {
-		int x = evt.getX();
-        int y = evt.getY();
-        int touchVert = touchingVertex(x,y);
-		if(touchVert>=0) {
-			if(selectedVertex<0) {
-				selectedVertex = touchVert;
-			}else if(touchVert!=selectedVertex){
-				addEdge(selectedVertex, touchVert);
-				addEdge(touchVert, selectedVertex);
-			}
-		}
-	}
-	
 	public void addUndiEdgeControl(int x, int y, int weight) {
 		int touchVert = touchingVertex(x,y);
 		if(touchVert>=0) {
@@ -332,20 +282,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 			}else if(touchVert!=selectedVertex){
 				addEdge(selectedVertex, touchVert, weight);
 				addEdge(touchVert, selectedVertex, weight);
-			}
-		}
-	}
-	
-	public void delUndiEdgeMouseListener(MouseEvent evt) {
-		int x = evt.getX();
-        int y = evt.getY();
-        int touchVert = touchingVertex(x,y);
-		if(touchVert>=0) {
-			if(selectedVertex<0) {
-				selectedVertex = touchVert;
-			}else if(touchVert!=selectedVertex){
-				delEdge(selectedVertex, touchVert);
-				delEdge(touchVert, selectedVertex);
 			}
 		}
 	}
@@ -362,16 +298,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		}
 	}
 	
-	public void addSandMouseListener( MouseEvent evt ) {
-		int x = evt.getX();
-        int y = evt.getY();
-		int touchVert = touchingVertex(x,y);
-		if(touchVert>=0) {
-			selectedVertex = touchVert;
-			addSand(touchVert,1);
-		}
-	}
-	
 	public void addSandControl(int x, int y, int amount) {
 		int touchVert = touchingVertex(x,y);
 		if(touchVert>=0) {
@@ -380,21 +306,95 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		}
 	}
 	
-	public void delSandMouseListener( MouseEvent evt ) {
-		int x = evt.getX();
-        int y = evt.getY();
-		int touchVert = touchingVertex(x,y);
-		if(touchVert>=0) {
-			selectedVertex = touchVert;
-			addSand(touchVert,-1);
+	public void makeGrid2(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+		int gridSpacing = VERT_RADIUS*2;
+		//int curVertDataSize = vertexData.size();
+		
+		int[][] gridRef = new int[rows][cols];
+		int[] nBorderRef = new int[cols];
+		int[] sBorderRef = new int[cols];
+		int[] eBorderRef = new int[rows];
+		int[] wBorderRef = new int[rows];
+		
+		//create vertices
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++){
+				gridRef[i][j]=vertexData.size();
+				addVertex(x+j*gridSpacing, y+i*gridSpacing);
+			}
 		}
-	}
-	
-	public void setGridRows(int rows) {
-		this.gridRows = rows;
-	}
-	public void setGridCols(int cols) {
-		this.gridCols = cols;
+		
+		for(int i=0; i<cols; i++) {
+			if(nBorder<2){
+				nBorderRef[i]=vertexData.size();
+				addVertex(x+i*gridSpacing, y-gridSpacing);
+			}
+			if(sBorder<2){
+				sBorderRef[i]=vertexData.size();
+				addVertex(x+i*gridSpacing, y+(rows)*gridSpacing);
+			}
+				
+		}
+		
+		for(int i=0; i<rows; i++) {
+			if(wBorder<2){
+				wBorderRef[i]=vertexData.size();
+				addVertex(x-gridSpacing, y+i*gridSpacing);
+			}
+			if(eBorder<2){
+				eBorderRef[i]=vertexData.size();
+				addVertex(x+(cols)*gridSpacing, y+i*gridSpacing);
+			}	
+		}
+		
+		//create edges
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++){
+				if(i==0) {
+					if(nBorder==0){
+						addEdge(gridRef[i][j], nBorderRef[j],1 );
+					}else if(nBorder==1) {
+						addEdge(gridRef[i][j], nBorderRef[j],1 );
+						addEdge( nBorderRef[j], gridRef[i][j],1 );
+					}
+				}else{
+					addEdge(gridRef[i][j], gridRef[i-1][j] );
+				}
+				
+				if(i==rows-1){
+					if(sBorder==0){
+						addEdge(gridRef[i][j], sBorderRef[j],1 );
+					}else if(sBorder==1) {
+						addEdge(gridRef[i][j], sBorderRef[j],1 );
+						addEdge( sBorderRef[j], gridRef[i][j],1 );
+					}
+				}else{
+					addEdge(gridRef[i][j], gridRef[i+1][j] );
+				}
+				if(j==0) {
+					if(eBorder==0){
+						addEdge(gridRef[i][j], eBorderRef[i],1 );
+					}else if(eBorder==1) {
+						addEdge(gridRef[i][j], eBorderRef[i],1 );
+						addEdge( eBorderRef[i], gridRef[i][j],1 );
+					}
+				}else{
+					addEdge(gridRef[i][j], gridRef[i][j-1] );
+				}
+				
+				if(j==cols-1){
+					if(wBorder==0){
+						addEdge(gridRef[i][j], wBorderRef[i],1 );
+					}else if(wBorder==1) {
+						addEdge(gridRef[i][j], wBorderRef[i],1 );
+						addEdge( wBorderRef[i], gridRef[i][j],1 );
+					}
+				}else{
+					addEdge(gridRef[i][j], gridRef[i][j+1] );
+				}
+				
+			}
+		}
 	}
 	
 	public void makeGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
