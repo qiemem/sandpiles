@@ -371,7 +371,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				}else{
 					addEdge(gridRef[i][j], gridRef[i+1][j] );
 				}
-				if(j==0) {
+				if(j==cols-1) {
 					if(eBorder==0){
 						addEdge(gridRef[i][j], eBorderRef[i],1 );
 					}else if(eBorder==1) {
@@ -379,10 +379,10 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 						addEdge( eBorderRef[i], gridRef[i][j],1 );
 					}
 				}else{
-					addEdge(gridRef[i][j], gridRef[i][j-1] );
+					addEdge(gridRef[i][j], gridRef[i][j+1] );
 				}
 				
-				if(j==cols-1){
+				if(j==0){
 					if(wBorder==0){
 						addEdge(gridRef[i][j], wBorderRef[i],1 );
 					}else if(wBorder==1) {
@@ -390,7 +390,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 						addEdge( wBorderRef[i], gridRef[i][j],1 );
 					}
 				}else{
-					addEdge(gridRef[i][j], gridRef[i][j+1] );
+					addEdge(gridRef[i][j], gridRef[i][j-1] );
 				}
 				
 			}
