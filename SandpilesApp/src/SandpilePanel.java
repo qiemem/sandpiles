@@ -203,7 +203,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
             Integer[] v = vertexData.get(i);
 			int radius = VERT_RADIUS;
 			if(sg.degree(i)>0 && sg.degree(i)>v[2])
-				radius = (int)(((float)v[2])/sg.degree(i) * VERT_RADIUS);
+				radius = (int)(((float)v[2]+2)/(sg.degree(i)+2) * VERT_RADIUS);
             int colorNum = Math.max(0,Math.min(v[2],SAND_COLOR.length-1));
 			if(color){
 				g.setColor(SAND_COLOR[colorNum]);
@@ -397,6 +397,169 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		}
 	}
 	
+	public void makeHexGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+		int gridSpacing = VERT_RADIUS*2;
+		//int curVertDataSize = vertexData.size();
+		
+		int[][] gridRef = new int[rows][cols];
+		int[] nBorderRef = new int[cols+1];
+		int[] sBorderRef = new int[cols+1];
+		int[] eBorderRef = new int[rows];
+		int[] wBorderRef = new int[rows];
+		
+		//create vertices
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++){
+				gridRef[i][j]=vertexData.size();
+				addVertex(x+j*gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
+			}
+		}
+		
+		for(int i=0; i<cols+1; i++) {
+			if(nBorder<2){
+				nBorderRef[i]=vertexData.size();
+				addVertex(x+i*gridSpacing-(gridSpacing/2), y-gridSpacing);
+			}
+			if(sBorder<2){
+				sBorderRef[i]=vertexData.size();
+				addVertex(x+i*gridSpacing-(gridSpacing/2), y+(rows)*gridSpacing);
+			}
+				
+		}
+		
+		for(int i=0; i<rows; i++) {
+			if(wBorder<2){
+				wBorderRef[i]=vertexData.size();
+				addVertex(x-gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
+			}
+			if(eBorder<2){
+				eBorderRef[i]=vertexData.size();
+				addVertex(x+(cols)*gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
+			}	
+		}
+		
+		//create edges
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<cols; j++){
+				if(i%2 == 0) {
+					if(i==0) {
+						if(nBorder==0){
+							addEdge(gridRef[i][j], nBorderRef[j],1 );
+							addEdge(gridRef[i][j], nBorderRef[j+1],1 );
+						}else if(nBorder==1) {
+							addEdge(gridRef[i][j], nBorderRef[j],1 );
+							addEdge( nBorderRef[j], gridRef[i][j],1 );
+							addEdge(gridRef[i][j], nBorderRef[j+1],1 );
+							addEdge( nBorderRef[j+1], gridRef[i][j],1 );
+						}
+					}else{
+						addEdge(gridRef[i][j], gridRef[i-1][j] );
+						if(j==0){
+							if(wBorder==0){
+								addEdge(gridRef[i][j], wBorderRef[i-1] );
+							}else if(wBorder==2){
+								addEdge(gridRef[i][j], wBorderRef[i-1] );
+								addEdge(wBorderRef[i-1], gridRef[i][j] );
+							}
+						}else{
+							
+							addEdge(gridRef[i][j], gridRef[i-1][j-1] );
+						}
+					}
+					if(i==rows-1){
+						if(sBorder==0){
+							addEdge(gridRef[i][j], sBorderRef[j],1 );
+							addEdge(gridRef[i][j], sBorderRef[j+1],1 );
+						}else if(sBorder==1) {
+							addEdge(gridRef[i][j], sBorderRef[j],1 );
+							addEdge( sBorderRef[j], gridRef[i][j],1 );
+							addEdge(gridRef[i][j], sBorderRef[j+1],1 );
+							addEdge( sBorderRef[j+1], gridRef[i][j],1 );
+						}
+					}else{
+						addEdge(gridRef[i][j], gridRef[i+1][j] );
+						if(j==0){
+							
+							if(wBorder==0){
+								addEdge(gridRef[i][j], wBorderRef[i+1] );
+							}else if(wBorder==2){
+								addEdge(gridRef[i][j], wBorderRef[i+1] );
+								addEdge(wBorderRef[i+1], gridRef[i][j] );
+							}
+						}else{
+							addEdge(gridRef[i][j], gridRef[i+1][j-1] );
+						}
+					}
+				}else{
+					if(i==rows-1){
+						if(sBorder==0){
+							addEdge(gridRef[i][j], sBorderRef[j],1 );
+							addEdge(gridRef[i][j], sBorderRef[j+1],1 );
+						}else if(sBorder==1) {
+							addEdge(gridRef[i][j], sBorderRef[j],1 );
+							addEdge( sBorderRef[j], gridRef[i][j],1 );
+							addEdge(gridRef[i][j], sBorderRef[j+1],1 );
+							addEdge( sBorderRef[j+1], gridRef[i][j],1 );
+						}
+						
+					}else{
+						if(j==cols-1){
+
+							if(eBorder==0){
+								addEdge(gridRef[i][j], eBorderRef[i+1] );
+							}else if(eBorder==2){
+								addEdge(gridRef[i][j], eBorderRef[i+1] );
+								addEdge(eBorderRef[i+1], gridRef[i][j] );
+
+							}
+						}else{
+							addEdge(gridRef[i][j], gridRef[i+1][j+1] );
+						}
+						addEdge(gridRef[i][j], gridRef[i+1][j] );
+					}
+					if(j==cols-1){
+							
+						if(eBorder==0){
+							addEdge(gridRef[i][j], eBorderRef[i-1] );
+						}else if(eBorder==2){
+							addEdge(gridRef[i][j], eBorderRef[i-1] );
+							addEdge(eBorderRef[i-1], gridRef[i][j] );
+							
+						}
+					}else{
+						addEdge(gridRef[i][j], gridRef[i-1][j+1] );
+					}
+					addEdge(gridRef[i][j], gridRef[i-1][j] );
+				}
+				if(j==cols-1) {
+					if(eBorder==0){
+						addEdge(gridRef[i][j], eBorderRef[i],1 );
+					}else if(eBorder==1) {
+						addEdge(gridRef[i][j], eBorderRef[i],1 );
+						addEdge( eBorderRef[i], gridRef[i][j],1 );
+					}
+				}else{
+					addEdge(gridRef[i][j], gridRef[i][j+1] );
+				}
+
+				if(j==0){
+					if(wBorder==0){
+						addEdge(gridRef[i][j], wBorderRef[i],1 );
+					}else if(wBorder==1) {
+						addEdge(gridRef[i][j], wBorderRef[i],1 );
+						addEdge( wBorderRef[i], gridRef[i][j],1 );
+					}
+				}else{
+					addEdge(gridRef[i][j], gridRef[i][j-1] );
+				}
+				
+			}
+		}
+	}
+	
+	
+	
+	//Out of date:
 	public void makeGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
 		int gridSpacing = VERT_RADIUS*2;
 		
@@ -480,6 +643,14 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		
 	}
 	
+	public void setToDuelConfig() {
+		for(int i = 0; i<vertexData.size(); i++){
+			if(sg.degree(i)>0)
+				sg.setSand(i, sg.degree(i)-1 - sg.getSand(i) );
+		}
+		repaint();
+	}
+	
 	public void setControlState(int controlState){
 		//curState = controlState;
 	}
@@ -493,8 +664,8 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	public void maxStableConfig() {
 		for(int i = 0; i<vertexData.size(); i++) {
 			if(sg.degree(i)>0){
-				vertexData.get(i)[2] = sg.degree(i)-1;
-				sg.setSand(i, vertexData.get(i)[2]);
+				//vertexData.get(i)[2] += sg.degree(i)-1;
+				sg.addSand(i, sg.degree(i)-1);
 			}
 		}
 		repaint();

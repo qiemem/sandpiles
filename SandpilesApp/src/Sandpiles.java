@@ -28,6 +28,7 @@ public class Sandpiles extends javax.swing.JFrame {
 	private static final String ADD_SAND_STATE = "Add Sand";
 	private static final String DEL_SAND_STATE = "Remove Sand";
 	private static final String MAKE_GRID_STATE = "Make Grid";
+	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
 	private static final String ADD_VERTEX_STATE = "Add Vertex";
 	private static final String DEL_VERTEX_STATE = "Delete Vertex";
 	private static final String ADD_EDGE_STATE = "Add Edge";
@@ -94,6 +95,7 @@ public class Sandpiles extends javax.swing.JFrame {
         sandpileViewPanel = new SandpilePanel();
         colorCheckBox = new javax.swing.JCheckBox();
         labelsCheckBox = new javax.swing.JCheckBox();
+        duelConfigButton = new javax.swing.JButton();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -325,7 +327,7 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
-        controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { ADD_VERTEX_STATE, DEL_VERTEX_STATE, ADD_EDGE_STATE, DEL_EDGE_STATE, ADD_UNDI_EDGE_STATE, DEL_UNDI_EDGE_STATE, ADD_SAND_STATE, DEL_SAND_STATE, MAKE_GRID_STATE }));
+        controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { ADD_VERTEX_STATE, DEL_VERTEX_STATE, ADD_EDGE_STATE, DEL_EDGE_STATE, ADD_UNDI_EDGE_STATE, DEL_UNDI_EDGE_STATE, ADD_SAND_STATE, DEL_SAND_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE }));
         controlStateComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 controlStateComboBoxItemStateChanged(evt);
@@ -337,7 +339,7 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
-        maxSandButton.setText("Max Stable Config");
+        maxSandButton.setText("Add Max Stable Config");
         maxSandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maxSandButtonActionPerformed(evt);
@@ -423,6 +425,13 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
+        duelConfigButton.setText("Duel Config");
+        duelConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                duelConfigButtonActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -431,26 +440,28 @@ public class Sandpiles extends javax.swing.JFrame {
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(quitButton)
-                    .add(controlStateComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 205, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(maxSandButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 198, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(addOneGrainEverywhereButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 198, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(controlStateComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(clearSandButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 198, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                        .add(layout.createSequentialGroup()
-                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(repaintCheckBox)
-                                .add(colorCheckBox)
-                                .add(labelsCheckBox)
-                                .add(delayLabel))
-                            .add(10, 10, 10)
-                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, stepButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .add(org.jdesktop.layout.GroupLayout.TRAILING, runButton))
-                                .add(delayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 75, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                        .add(delaySlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, duelConfigButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, quitButton)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, maxSandButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.TRAILING, addOneGrainEverywhereButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(layout.createSequentialGroup()
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                    .add(repaintCheckBox)
+                                    .add(colorCheckBox)
+                                    .add(labelsCheckBox)
+                                    .add(delayLabel))
+                                .add(10, 10, 10)
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                        .add(org.jdesktop.layout.GroupLayout.TRAILING, stepButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .add(org.jdesktop.layout.GroupLayout.TRAILING, runButton))
+                                    .add(delayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 75, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                            .add(delaySlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -478,12 +489,14 @@ public class Sandpiles extends javax.swing.JFrame {
                 .add(maxSandButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(addOneGrainEverywhereButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(duelConfigButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 48, Short.MAX_VALUE)
                 .add(clearSandButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(controlStateComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 294, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(quitButton)
                 .add(31, 31, 31))
@@ -563,7 +576,7 @@ private void controlStateComboBoxItemStateChanged(java.awt.event.ItemEvent evt) 
 	//cl.show(optionsContainerPanel, (String)evt.getItem());
 	if(currentState.equals(ADD_SAND_STATE)||currentState.equals(DEL_SAND_STATE)) {
 		cl.show(optionsContainerPanel, ADD_SAND_STATE);
-	}else if(currentState.equals(MAKE_GRID_STATE)){
+	}else if(currentState.equals(MAKE_GRID_STATE) || currentState.equals(MAKE_HEX_GRID_STATE)){
 		cl.show(optionsContainerPanel, MAKE_GRID_STATE);
 	}else if(currentState.equals(ADD_EDGE_STATE)||currentState.equals(DEL_EDGE_STATE)||currentState.equals(ADD_UNDI_EDGE_STATE)|| currentState.equals(DEL_UNDI_EDGE_STATE)) {
 		cl.show(optionsContainerPanel, ADD_EDGE_STATE);	
@@ -590,6 +603,12 @@ private void sandpileViewPanelMouseReleased(java.awt.event.MouseEvent evt) {//GE
 		sandpileViewPanel.addSandControl(x,y, -Integer.valueOf(numOfGrainsField.getText() ) );
 	}else if(currentState.equals(MAKE_GRID_STATE)){
 		sandpileViewPanel.makeGrid2(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y, 
+				nBorderComboBox.getSelectedIndex(), 
+				sBorderComboBox.getSelectedIndex(), 
+				eBorderComboBox.getSelectedIndex(), 
+				wBorderComboBox.getSelectedIndex());
+	}else if(currentState.equals(MAKE_HEX_GRID_STATE)){
+		sandpileViewPanel.makeHexGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y, 
 				nBorderComboBox.getSelectedIndex(), 
 				sBorderComboBox.getSelectedIndex(), 
 				eBorderComboBox.getSelectedIndex(), 
@@ -637,6 +656,10 @@ private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GE
 	sandpileViewPanel.setLabels(labelsCheckBox.isSelected());
 }//GEN-LAST:event_labelsCheckBoxActionPerformed
 
+private void duelConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duelConfigButtonActionPerformed
+	sandpileViewPanel.setToDuelConfig();
+}//GEN-LAST:event_duelConfigButtonActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -660,6 +683,7 @@ private void labelsCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JLabel delayLabel;
     private javax.swing.JSlider delaySlider;
     private javax.swing.JTextField delayTextField;
+    private javax.swing.JButton duelConfigButton;
     private javax.swing.JComboBox eBorderComboBox;
     private javax.swing.JTextField gridColsField;
     private javax.swing.JTextField gridRowsField;
