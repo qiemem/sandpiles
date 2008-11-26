@@ -6,14 +6,14 @@
 //  Copyright 2008 Reed College. All rights reserved.
 //
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SandpileGraph {
-	private Vector<SandpileVertex> vertices;
+	private ArrayList<SandpileVertex> vertices;
 	
 	public SandpileGraph() {
-		this.vertices = new Vector<SandpileVertex>();
+		this.vertices = new ArrayList<SandpileVertex>();
 	}
 	
 	/**
@@ -98,6 +98,27 @@ public class SandpileGraph {
 	}
 	
 	/**
+	 * Sets the current overall config.
+	 */
+	public void setSand(List<Integer> sandConfig) {
+		for(int i =0; i<sandConfig.size(); i++){
+			this.setSand(i, sandConfig.get(i));
+		}
+	}
+	
+	public void setSandEverywhere(int amount) {
+		for(SandpileVertex v : this.vertices){
+			v.setSand(amount);
+		}
+	}
+	
+	public void addSandEverywhere(int amount) {
+		for(SandpileVertex v : this.vertices) {
+			v.addSand(amount);
+		}
+	}
+	
+	/**
 	 * Retrieves the amount of sand on the vertex indicated.
 	 */
 	public int getSand(int vert) {
@@ -116,11 +137,26 @@ public class SandpileGraph {
 	 */
 	public List<Integer> getOutgoingVertices( int vert ){
 		List<SandpileVertex> outVerts = this.vertices.get(vert).getOutgoingVertices();
-		Vector<Integer> outVertIndices = new Vector<Integer>(outVerts.size());
+		ArrayList<Integer> outVertIndices = new ArrayList<Integer>(outVerts.size());
 		for(SandpileVertex v : outVerts) {
 			outVertIndices.add(vertices.indexOf(v));
 		}
 		return outVertIndices;
+	}
+	
+	public List<Integer> getIncomingVertices(int vert) {
+		ArrayList<Integer> incomingVertIndecies = new ArrayList<Integer>();
+		for(int i=0; i<this.vertices.size(); i++){
+			if(this.vertices.get(i).getOutgoingVertices().contains(this.vertices.get(vert))){
+				incomingVertIndecies.add(i);
+			}
+		}
+		return incomingVertIndecies;
+		
+	}
+	
+	public boolean isSink(int vertIndex) {
+		return this.vertices.get(vertIndex).getOutgoingVertices().isEmpty();
 	}
 	
 	/**
@@ -141,13 +177,19 @@ public class SandpileGraph {
 	 * Fires all unstable vertices.
 	 */
 	public void update() {
-		Vector<SandpileVertex> verticesToUpdate = new Vector<SandpileVertex>();
+		ArrayList<SandpileVertex> verticesToUpdate = new ArrayList<SandpileVertex>();
 		for( SandpileVertex v : this.vertices ){
 			if(v.active())
 				verticesToUpdate.add(v);
 		}
 		for( SandpileVertex v : verticesToUpdate)
 			v.update();
+	}
+	
+	public void stabilize() {
+		while(!this.stable()) {
+			this.update();
+		}
 	}
 	
 	/**
@@ -186,5 +228,43 @@ public class SandpileGraph {
         }
         return output;
     }
+	
+	public List<Integer> getMaxConfig() {
+		ArrayList<Integer> maxConfig = new ArrayList<Integer>(this.vertices.size());
+		for(SandpileVertex v : this.vertices){
+			maxConfig.add(v.degree()-1);
+		}
+		return maxConfig;
+	}
+	
+	public List<Integer> getDualConfig() {
+		ArrayList<Integer> dualConfig = new ArrayList<Integer>(this.vertices.size());
+		for(SandpileVertex v : this.vertices) {
+			dualConfig.add(v.degree() - 1 - v.sand());
+		}
+		return dualConfig;
+	}
+	
+	public List<Integer> getCurrentConfig() {
+		ArrayList<Integer> currentConfig = new ArrayList<Integer>(this.vertices.size());
+		for(SandpileVertex v : this.vertices) {
+			currentConfig.add(v.sand());
+		}
+		return currentConfig;
+	}
+	
+	public List<Integer> getIdentityConfig() {
+		List<Integer> oldConfig = this.getCurrentConfig();
+		List<Integer> maxConfig = this.getMaxConfig();
+		this.setSand(maxConfig);
+		this.addSand(maxConfig);
+		this.stabilize();
+		this.setSand(this.getDualConfig());
+		this.addSand(maxConfig);
+		this.stabilize();
+		List<Integer> identity = this.getCurrentConfig();
+		this.setSand(oldConfig);
+		return identity;
+	}
 	
 }

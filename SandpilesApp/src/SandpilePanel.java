@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 //import java.lang.Math;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class SandpilePanel extends JPanel implements ActionListener, Serializable{
 	public static final int ADD_VERT_STATE = 0;
@@ -34,6 +34,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	private boolean repaint = true;
 	private boolean labels = true;
 	private boolean color = true;
+	private boolean changingNodeSize = true;
 	
     private SandpileGraph sg;
     
@@ -42,8 +43,8 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	static final Color[] SAND_MONOCHROME = {new Color(25,25,25) , new Color(50,50,50), new Color(100,100,100), new Color(150,150,150), new Color(200,200,200), new Color(225,225,225), new Color(255,255,255)};
 	
     
-    Vector<Integer[]> vertexData;
-    Vector<Integer[]> edges;
+    ArrayList<Integer[]> vertexData;
+    ArrayList<Integer[]> edges;
     
     private int selectedVertex;
 	
@@ -60,8 +61,8 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				//this.curState = ADD_VERT_STATE;
 		
         this.sg = sg;
-        vertexData = new Vector<Integer[]>();
-        edges = new Vector<Integer[]>();
+        vertexData = new ArrayList<Integer[]>();
+        edges = new ArrayList<Integer[]>();
         //Integer[] pos1 = {20,20,0};
         //Integer[] pos2 = {20,50,0};
         //vertexData.add(pos1);
@@ -167,6 +168,11 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		labels = val;
 		repaint();
 	}
+	
+	public void setChangingNodeSize(boolean val) {
+		changingNodeSize = val;
+		repaint();
+	}
     
     public void actionPerformed( ActionEvent evt) {
         update();
@@ -202,7 +208,8 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 			
             Integer[] v = vertexData.get(i);
 			int radius = VERT_RADIUS;
-			if(sg.degree(i)>0 && sg.degree(i)>v[2])
+			
+			if(changingNodeSize&&(sg.degree(i)>0 && sg.degree(i)>v[2]))
 				radius = (int)(((float)v[2]+2)/(sg.degree(i)+2) * VERT_RADIUS);
             int colorNum = Math.max(0,Math.min(v[2],SAND_COLOR.length-1));
 			if(color){
@@ -395,6 +402,61 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				
 			}
 		}
+	}
+	
+	public void makeHoneycomb( int radius, int x, int y, int borders){
+		/*
+		 * for borders:
+		 * 0 - directed
+		 * 1 - undirected
+		 **/
+		int gridSpacing = VERT_RADIUS*2;
+		int curRowLength = radius;
+		int[][] gridRef = new int[radius*2-1][radius*2-1];
+		for(int i=0; i<radius*2-1; i++){
+			for(int j=0; j<curRowLength; j++){
+				gridRef[i][j]=vertexData.size();
+				addVertex(x+j*gridSpacing+(i+(radius-1)%2)%2*(gridSpacing/2) - curRowLength/2*(gridSpacing), y+i*(gridSpacing-4));
+			}
+			if(i<radius-1){
+				curRowLength++;
+			}else{
+				curRowLength--;
+			}
+		}
+		curRowLength = radius;
+		for(int i=0; i<radius*2-1; i++){
+			if(i==0||i==radius*2-2) continue;
+			for(int j=0; j<curRowLength; j++){
+				if(j==0) continue;
+				addEdge(gridRef[i][j], gridRef[i][j-1]);
+				addEdge(gridRef[i][j], gridRef[i][j+1]);
+				if(i<radius-1){
+					addEdge(gridRef[i][j], gridRef[i-1][j-1]);
+					addEdge(gridRef[i][j], gridRef[i-1][j]);
+					addEdge(gridRef[i][j], gridRef[i+1][j+1]);
+					addEdge(gridRef[i][j], gridRef[i+1][j]);
+				}else if(i==radius-1){
+					addEdge(gridRef[i][j], gridRef[i-1][j-1]);
+					addEdge(gridRef[i][j], gridRef[i-1][j]);
+					addEdge(gridRef[i][j], gridRef[i+1][j-1]);
+					addEdge(gridRef[i][j], gridRef[i+1][j]);
+				}else{
+					addEdge(gridRef[i][j], gridRef[i-1][j+1]);
+					addEdge(gridRef[i][j], gridRef[i-1][j]);
+					addEdge(gridRef[i][j], gridRef[i+1][j-1]);
+					addEdge(gridRef[i][j], gridRef[i+1][j]);
+				}
+				
+			}
+			if(i<radius-1){
+				curRowLength++;
+			}else{
+				curRowLength--;
+			}
+		}
+		
+		
 	}
 	
 	public void makeHexGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
@@ -643,11 +705,17 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		
 	}
 	
-	public void setToDuelConfig() {
-		for(int i = 0; i<vertexData.size(); i++){
+	public void setToDualConfig() {
+		/*for(int i = 0; i<vertexData.size(); i++){
 			if(sg.degree(i)>0)
 				sg.setSand(i, sg.degree(i)-1 - sg.getSand(i) );
-		}
+		}*/
+		sg.setSand(sg.getDualConfig());
+		repaint();
+	}
+	
+	public void addDualConfig() {
+		sg.addSand(sg.getDualConfig());
 		repaint();
 	}
 	
@@ -661,13 +729,39 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
         }
     }
 	
-	public void maxStableConfig() {
-		for(int i = 0; i<vertexData.size(); i++) {
+	public void setToMaxStableConfig() {
+		/*for(int i = 0; i<vertexData.size(); i++) {
 			if(sg.degree(i)>0){
 				//vertexData.get(i)[2] += sg.degree(i)-1;
 				sg.addSand(i, sg.degree(i)-1);
 			}
-		}
+		}*/
+		sg.setSand(sg.getMaxConfig());
+		repaint();
+	}
+	
+	public void addMaxStableConfig(){
+		sg.addSand(sg.getMaxConfig());
+		repaint();
+	}
+	
+	public void addIdentity() {
+		sg.addSand(sg.getIdentityConfig());
+		repaint();
+	}
+	
+	public void setToIdentity() {
+		sg.setSand(sg.getIdentityConfig());
+		repaint();
+	}
+	
+	public void setSandEverywhere(int amount) {
+		sg.setSandEverywhere(amount);
+		repaint();
+	}
+	
+	public void addSandEverywhere(int amount) {
+		sg.addSandEverywhere(amount);
 		repaint();
 	}
 	
@@ -746,13 +840,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				return;
 			}
 		}
-	}
-	
-	public void addSandEverywhere(int amount) {
-		for(int i=0; i<vertexData.size(); i++) {
-			addSand(i,amount);
-		}
-		repaint();
 	}
     
     public void addSand(int vert, int amount) {
