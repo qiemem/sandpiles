@@ -6,8 +6,7 @@
 //  Copyright 2008 Reed College. All rights reserved.
 //
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SandpileGraph {
 	private ArrayList<SandpileVertex> vertices;
@@ -33,7 +32,11 @@ public class SandpileGraph {
 		}
 		this.vertices.remove(i);
 	}
-	
+
+	public void removeAllVertices() {
+		this.vertices.clear();
+	}
+
 	/**
 	 * Adds the given number of vertices to the graph.
 	 */
@@ -53,9 +56,7 @@ public class SandpileGraph {
 	 * Adds an edge of the given weight.
 	 */
 	public void addEdge(int sourceVert, int destVert, int weight) {
-		for( int i =0; i<weight; i++) {
-			this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert));
-		}
+		this.vertices.get(sourceVert).addOutgoingEdge(this.vertices.get(destVert), weight);
 	}
 	
 	/**
@@ -69,9 +70,7 @@ public class SandpileGraph {
 	 * Removes an edge of the given weight.
 	 */
 	public void removeEdge(int sourceVert, int destVert, int weight) {
-		for(int i=0; i<weight; i++){
-			this.vertices.get(sourceVert).removeEdge(this.vertices.get(destVert));
-		}
+		this.vertices.get(sourceVert).removeEdge(this.vertices.get(destVert), weight);
 	}
 	
 	/**
@@ -135,19 +134,19 @@ public class SandpileGraph {
 	/**
 	 * Retrieves a list of vertices which the given vertex has outgoing edges to.
 	 */
-	public List<Integer> getOutgoingVertices( int vert ){
-		List<SandpileVertex> outVerts = this.vertices.get(vert).getOutgoingVertices();
-		ArrayList<Integer> outVertIndices = new ArrayList<Integer>(outVerts.size());
+	public Set<Integer> getOutgoingVertices( int vert ){
+		Set<SandpileVertex> outVerts = this.vertices.get(vert).getOutgoingVertices();
+		Set<Integer> outVertIndices = new HashSet<Integer>(outVerts.size());
 		for(SandpileVertex v : outVerts) {
 			outVertIndices.add(vertices.indexOf(v));
 		}
 		return outVertIndices;
 	}
 	
-	public List<Integer> getIncomingVertices(int vert) {
-		ArrayList<Integer> incomingVertIndecies = new ArrayList<Integer>();
+	public Set<Integer> getIncomingVertices(int vert) {
+		Set<Integer> incomingVertIndecies = new HashSet<Integer>();
 		for(int i=0; i<this.vertices.size(); i++){
-			if(this.vertices.get(i).getOutgoingVertices().contains(this.vertices.get(vert))){
+			if(this.vertices.get(i).weight(this.vertices.get(vert))>0){
 				incomingVertIndecies.add(i);
 			}
 		}
@@ -156,7 +155,7 @@ public class SandpileGraph {
 	}
 	
 	public boolean isSink(int vertIndex) {
-		return this.vertices.get(vertIndex).getOutgoingVertices().isEmpty();
+		return this.vertices.get(vertIndex).isSink();
 	}
 	
 	/**
@@ -164,6 +163,10 @@ public class SandpileGraph {
 	 */
 	public void fireVertex(int vert) {
 		this.vertices.get(vert).fire();
+	}
+
+	public void reverseFireVertex(int vert) {
+		this.vertices.get(vert).reverseFire();
 	}
 	
 	/**
@@ -177,7 +180,7 @@ public class SandpileGraph {
 	 * Fires all unstable vertices.
 	 */
 	public void update() {
-		ArrayList<SandpileVertex> verticesToUpdate = new ArrayList<SandpileVertex>();
+		Set<SandpileVertex> verticesToUpdate = new HashSet<SandpileVertex>();
 		for( SandpileVertex v : this.vertices ){
 			if(v.active())
 				verticesToUpdate.add(v);
@@ -251,6 +254,31 @@ public class SandpileGraph {
 			currentConfig.add(v.sand());
 		}
 		return currentConfig;
+	}
+
+	public List<Integer> getMinimalBurningConfig() {
+		List<Integer> oldConfig = this.getCurrentConfig();
+		this.setSandEverywhere(0);
+		for(int i=0; i<this.vertices.size(); i++){
+			reverseFireVertex(i);
+		}
+		int w = getInDebtVertex();
+		while(w>-1){
+			reverseFireVertex(w);
+			w = getInDebtVertex();
+		}
+		List<Integer> burningConfig = this.getCurrentConfig();
+		this.setSand(oldConfig);
+		return burningConfig;
+	}
+
+	private int getInDebtVertex(){
+		for(int i=0; i<this.vertices.size(); i++){
+			if(this.getSand(i)<0&&!this.isSink(i)){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	public List<Integer> getIdentityConfig() {

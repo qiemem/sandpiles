@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 //import java.lang.Math;
-import java.util.ArrayList;
+import java.util.*;
 
 public class SandpilePanel extends JPanel implements ActionListener, Serializable{
 	public static final int ADD_VERT_STATE = 0;
@@ -32,19 +32,22 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	public static final int MAKE_GRID_STATE = 8;
 	
 	private boolean repaint = true;
-	private boolean labels = true;
+	private boolean labels = false;
 	private boolean color = true;
 	private boolean changingNodeSize = true;
+	private boolean drawEdges = true;
 	
     private SandpileGraph sg;
     
     static final int VERT_RADIUS = 10;
     static final Color[] SAND_COLOR = {Color.gray ,  Color.blue, Color.cyan ,Color.green, Color.red, Color.orange, Color.yellow};
 	static final Color[] SAND_MONOCHROME = {new Color(25,25,25) , new Color(50,50,50), new Color(100,100,100), new Color(150,150,150), new Color(200,200,200), new Color(225,225,225), new Color(255,255,255)};
-	
+
+	private double scale = 1.0;
     
     ArrayList<Integer[]> vertexData;
-    ArrayList<Integer[]> edges;
+	//only keeps track of the existence of edges, not of their weights
+    ArrayList<HashSet<Integer>> edges;
     
     private int selectedVertex;
 	
@@ -62,7 +65,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		
         this.sg = sg;
         vertexData = new ArrayList<Integer[]>();
-        edges = new ArrayList<Integer[]>();
+        edges = new ArrayList<HashSet<Integer>>();
         //Integer[] pos1 = {20,20,0};
         //Integer[] pos2 = {20,50,0};
         //vertexData.add(pos1);
@@ -168,7 +171,12 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		labels = val;
 		repaint();
 	}
-	
+
+	public void setDrawEdges(boolean val){
+		this.drawEdges = val;
+		repaint();
+	}
+
 	public void setChangingNodeSize(boolean val) {
 		changingNodeSize = val;
 		repaint();
@@ -193,19 +201,21 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
         
         updateSandCounts();
         
-        
-        for(Integer[] e : edges) {
-            Integer[] pos1 = vertexData.get(e[0]);
-            Integer[] pos2 = vertexData.get(e[1]);
-            g.setColor(Color.white);
-            g.drawLine(pos1[0], pos1[1], pos2[0], pos2[1]);
-            g.setColor(Color.pink);
-			if(labels)
-				g.drawString(String.valueOf(e[2]), (int)(pos1[0]+0.8*(pos2[0]-pos1[0])), (int)(pos1[1]+0.8*(pos2[1] - pos1[1])));
-            
-        }
+        if(drawEdges){
+			for(int e1=0;e1<edges.size(); e1++) {
+				for(Integer e2 : edges.get(e1)){
+					Integer[] pos1 = vertexData.get(e1);
+					Integer[] pos2 = vertexData.get(e2);
+					g.setColor(Color.white);
+					g.drawLine(scaleCoordinate(pos1[0]), scaleCoordinate(pos1[1]), scaleCoordinate(pos2[0]), scaleCoordinate(pos2[1]));
+					g.setColor(Color.pink);
+					if(labels)
+						g.drawString(String.valueOf(sg.weight(e1,e2)), scaleCoordinate((int)(pos1[0]+0.8*(pos2[0]-pos1[0]))), scaleCoordinate((int)(pos1[1]+0.8*(pos2[1] - pos1[1]))));
+				}
+			}
+		}
+
         for(int i = 0; i<vertexData.size(); i++) {
-			
             Integer[] v = vertexData.get(i);
 			int radius = VERT_RADIUS;
 			
@@ -218,16 +228,15 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				g.setColor(SAND_MONOCHROME[colorNum]);
 			}
 			//g.setColor(new Color(+64));
-            g.fillOval(v[0]-radius, v[1]-radius, radius*2, radius*2);
+            g.fillOval(scaleCoordinate(v[0]-radius), scaleCoordinate(v[1]-radius), scaleCoordinate(radius*2), scaleCoordinate(radius*2));
             if(i==selectedVertex){
                 g.setColor(Color.cyan);
-                g.drawOval(v[0]-VERT_RADIUS, v[1]-VERT_RADIUS, VERT_RADIUS*2, VERT_RADIUS*2);
+                g.drawOval(scaleCoordinate(v[0]-VERT_RADIUS), scaleCoordinate(v[1]-VERT_RADIUS), scaleCoordinate(VERT_RADIUS*2), scaleCoordinate(VERT_RADIUS*2));
             }
             g.setColor(Color.black);
 			if(labels)
-				g.drawString(String.valueOf(v[2]), v[0]-VERT_RADIUS/2, v[1]+VERT_RADIUS/2);
+				g.drawString(String.valueOf(v[2]), scaleCoordinate(v[0]-VERT_RADIUS/2), scaleCoordinate(v[1]+VERT_RADIUS/2));
         }
-        
     }
 	
 	public void addVertexControl(int x, int y) {
@@ -312,11 +321,21 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 			addSand(touchVert,amount);
 		}
 	}
+
+	public void setSandControl(int x, int y, int amount) {
+		int touchVert = touchingVertex(x,y);
+		if(touchVert>=0) {
+			selectedVertex = touchVert;
+			setSand(touchVert,amount);
+		}
+
+	}
 	
-	public void makeGrid2(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+	public void makeGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+		x = unscaleCoordinate(x);
+		y = unscaleCoordinate(y);
 		int gridSpacing = VERT_RADIUS*2;
 		//int curVertDataSize = vertexData.size();
-		
 		int[][] gridRef = new int[rows][cols];
 		int[] nBorderRef = new int[cols];
 		int[] sBorderRef = new int[cols];
@@ -327,33 +346,31 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<cols; j++){
 				gridRef[i][j]=vertexData.size();
-				addVertex(x+j*gridSpacing, y+i*gridSpacing);
+				addVertexUnscaled(x+j*gridSpacing, y+i*gridSpacing);
 			}
 		}
 		
 		for(int i=0; i<cols; i++) {
 			if(nBorder<2){
 				nBorderRef[i]=vertexData.size();
-				addVertex(x+i*gridSpacing, y-gridSpacing);
+				addVertexUnscaled(x+i*gridSpacing, y-gridSpacing);
 			}
 			if(sBorder<2){
 				sBorderRef[i]=vertexData.size();
-				addVertex(x+i*gridSpacing, y+(rows)*gridSpacing);
+				addVertexUnscaled(x+i*gridSpacing, y+(rows)*gridSpacing);
 			}
 				
 		}
-		
 		for(int i=0; i<rows; i++) {
 			if(wBorder<2){
 				wBorderRef[i]=vertexData.size();
-				addVertex(x-gridSpacing, y+i*gridSpacing);
+				addVertexUnscaled(x-gridSpacing, y+i*gridSpacing);
 			}
 			if(eBorder<2){
 				eBorderRef[i]=vertexData.size();
-				addVertex(x+(cols)*gridSpacing, y+i*gridSpacing);
+				addVertexUnscaled(x+(cols)*gridSpacing, y+i*gridSpacing);
 			}	
 		}
-		
 		//create edges
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<cols; j++){
@@ -402,6 +419,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				
 			}
 		}
+		repaint();
 	}
 	
 	public void makeHoneycomb( int radius, int x, int y, int borders){
@@ -410,13 +428,15 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		 * 0 - directed
 		 * 1 - undirected
 		 **/
+		x = unscaleCoordinate(x);
+		y = unscaleCoordinate(y);
 		int gridSpacing = VERT_RADIUS*2;
 		int curRowLength = radius;
 		int[][] gridRef = new int[radius*2-1][radius*2-1];
 		for(int i=0; i<radius*2-1; i++){
 			for(int j=0; j<curRowLength; j++){
 				gridRef[i][j]=vertexData.size();
-				addVertex(x+j*gridSpacing+(i+(radius-1)%2)%2*(gridSpacing/2) - curRowLength/2*(gridSpacing), y+i*(gridSpacing-4));
+				addVertexUnscaled(x+j*gridSpacing+(i+(radius-1)%2)%2*(gridSpacing/2) - curRowLength/2*(gridSpacing), y+i*(gridSpacing-4));
 			}
 			if(i<radius-1){
 				curRowLength++;
@@ -455,11 +475,56 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 				curRowLength--;
 			}
 		}
-		
+		if(borders==1){
+			for(int i=0;i<radius;i++){
+				addEdge(gridRef[0][i], gridRef[1][i]);
+				addEdge(gridRef[0][i], gridRef[1][i+1]);
+				addEdge(gridRef[2*radius-2][i], gridRef[2*radius-3][i]);
+				addEdge(gridRef[2*radius-2][i], gridRef[2*radius-3][i+1]);
+				if(i>0){
+					addEdge(gridRef[0][i], gridRef[0][i-1]);
+					addEdge(gridRef[2*radius-2][i], gridRef[2*radius-2][i-1]);
+				}
+				if(i<radius-1){
+					addEdge(gridRef[0][i], gridRef[0][i+1]);
+					addEdge(gridRef[2*radius-2][i], gridRef[2*radius-2][i+1]);
+				}
+			}
+			for(int i=1; i<radius-1;i++){
+				addEdge(gridRef[i][0], gridRef[i-1][0]);
+				addEdge(gridRef[i][0], gridRef[i+1][0]);
+				addEdge(gridRef[i][0], gridRef[i][1]);
+				addEdge(gridRef[i][0], gridRef[i+1][1]);
+
+				addEdge(gridRef[radius+i-1][0], gridRef[radius+i][0]);
+				addEdge(gridRef[radius+i-1][0], gridRef[radius+i-2][0]);
+				addEdge(gridRef[radius+i-1][0], gridRef[radius+i-1][1]);
+				addEdge(gridRef[radius+i-1][0], gridRef[radius+i-2][1]);
+
+				addEdge(gridRef[i][radius+i-1], gridRef[i-1][radius+i-2]);
+				addEdge(gridRef[i][radius+i-1], gridRef[i+1][radius+i]);
+				addEdge(gridRef[i][radius+i-1], gridRef[i][radius+i-2]);
+				addEdge(gridRef[i][radius+i-1], gridRef[i+1][radius+i-1]);
+
+				addEdge(gridRef[radius+i-1][2*radius-i-2], gridRef[radius+i-2][2*radius-i-1]);
+				addEdge(gridRef[radius+i-1][2*radius-i-2], gridRef[radius+i][2*radius-i-3]);
+				addEdge(gridRef[radius+i-1][2*radius-i-2], gridRef[radius+i-1][2*radius-i-3]);
+				addEdge(gridRef[radius+i-1][2*radius-i-2], gridRef[radius+i-2][2*radius-i-2]);
+			}
+			addEdge(gridRef[radius-1][0], gridRef[radius-2][0]);
+			addEdge(gridRef[radius-1][0], gridRef[radius][0]);
+			addEdge(gridRef[radius-1][0], gridRef[radius-1][1]);
+
+			addEdge(gridRef[radius-1][2*radius-2], gridRef[radius-2][2*radius-3]);
+			addEdge(gridRef[radius-1][2*radius-2], gridRef[radius][2*radius-3]);
+			addEdge(gridRef[radius-1][2*radius-2], gridRef[radius-1][2*radius-3]);
+		}
 		
 	}
 	
 	public void makeHexGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
+		x = unscaleCoordinate(x);
+		y = unscaleCoordinate(y);
 		int gridSpacing = VERT_RADIUS*2;
 		//int curVertDataSize = vertexData.size();
 		
@@ -473,18 +538,18 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		for(int i=0; i<rows; i++) {
 			for(int j=0; j<cols; j++){
 				gridRef[i][j]=vertexData.size();
-				addVertex(x+j*gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
+				addVertexUnscaled(x+j*gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
 			}
 		}
 		
 		for(int i=0; i<cols+1; i++) {
 			if(nBorder<2){
 				nBorderRef[i]=vertexData.size();
-				addVertex(x+i*gridSpacing-(gridSpacing/2), y-gridSpacing);
+				addVertexUnscaled(x+i*gridSpacing-(gridSpacing/2), y-gridSpacing);
 			}
 			if(sBorder<2){
 				sBorderRef[i]=vertexData.size();
-				addVertex(x+i*gridSpacing-(gridSpacing/2), y+(rows)*gridSpacing);
+				addVertexUnscaled(x+i*gridSpacing-(gridSpacing/2), y+(rows)*gridSpacing);
 			}
 				
 		}
@@ -492,11 +557,11 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		for(int i=0; i<rows; i++) {
 			if(wBorder<2){
 				wBorderRef[i]=vertexData.size();
-				addVertex(x-gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
+				addVertexUnscaled(x-gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
 			}
 			if(eBorder<2){
 				eBorderRef[i]=vertexData.size();
-				addVertex(x+(cols)*gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
+				addVertexUnscaled(x+(cols)*gridSpacing + i%2*(gridSpacing/2), y+i*gridSpacing);
 			}	
 		}
 		
@@ -619,92 +684,6 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		}
 	}
 	
-	
-	
-	//Out of date:
-	public void makeGrid(int rows, int cols, int x, int y, int nBorder, int sBorder, int eBorder, int wBorder) {
-		int gridSpacing = VERT_RADIUS*2;
-		
-		int curVertDataSize = vertexData.size();
-		//note: curVertDataSize + i*cols + j will give the index of the i,jth
-		//vertex in the grid
-		for(int i = 0; i<rows+2; i++) {
-			if(nBorder==2&&i==0)
-				continue;
-			if(sBorder==2&&i==rows+1)
-				continue;
-			
-			for(int j = 0; j<cols+2; j++) {
-				if(wBorder==2&&j==0)
-					continue;
-				if(eBorder==2&&j==rows+1)
-					continue;
-				if((i==0 && j==0) || (i==rows+1 && j==cols+1) || (i==0 && j==cols+1) || (i==rows+1 && j==0) )
-					continue;
-				addVertex(x+j*gridSpacing, y+i*gridSpacing);
-			}
-		}
-		
-		int colSizeAdjust = 0;
-		int westAdjust = 0;
-		if(eBorder<2)	colSizeAdjust++;
-		if(wBorder<2){
-			colSizeAdjust++;
-			westAdjust++;
-		}
-		int indexAdjust = curVertDataSize + cols+westAdjust;
-		if(nBorder ==2)
-			indexAdjust=curVertDataSize;
-		for(int i = 0; i<rows; i++) {
-			for(int j = 0; j<cols; j++) {
-				if(i==0) {
-					if(nBorder<2){
-						addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, curVertDataSize+j);
-					}
-					if(nBorder==1){
-						addEdge( curVertDataSize+j, indexAdjust + (i)*(cols+colSizeAdjust)+j);
-					}
-				}else{
-					addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust + (i-1)*(cols+colSizeAdjust)+j);
-							
-				}
-				if(i==rows-1){
-					if(sBorder<2){
-						addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust-1 + rows*(cols+colSizeAdjust)+j);
-					}
-					if(sBorder==1){
-						addEdge(indexAdjust-1 + rows*(cols+colSizeAdjust)+j, indexAdjust + (i)*(cols+colSizeAdjust)+j);
-					}
-				}else {
-					addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust + (i+1)*(cols+colSizeAdjust)+j);
-					
-				}
-				if(j>0){
-					addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust + (i)*(cols+colSizeAdjust)+j-1);
-								
-				}else{
-					if(wBorder<2){
-						addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust + (i)*(cols+colSizeAdjust)+j-1);
-					}
-					if(wBorder==1){
-						addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j-1, indexAdjust + (i)*(cols+colSizeAdjust)+j);
-					}
-				}
-				if(j<rows-1){
-					addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust + (i)*(cols+colSizeAdjust)+j+1);
-					
-				}else{	
-					if(eBorder<2)
-						addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j, indexAdjust + (i)*(cols+colSizeAdjust)+j+1);
-					if(eBorder==1)
-						addEdge( indexAdjust + (i)*(cols+colSizeAdjust)+j+1, indexAdjust + (i)*(cols+colSizeAdjust)+j);
-				}
-			}
-			
-		}
-		
-	}
-	
 	public void setToDualConfig() {
 		/*for(int i = 0; i<vertexData.size(); i++){
 			if(sg.degree(i)>0)
@@ -722,7 +701,12 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 	public void setControlState(int controlState){
 		//curState = controlState;
 	}
-    
+
+	public void setScale(double scale){
+		this.scale=scale;
+		repaint();
+	}
+
     public void updateSandCounts() {
         for(int i = 0; i<vertexData.size(); i++) {
             vertexData.get(i)[2]=sg.getSand(i);
@@ -764,7 +748,17 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
 		sg.addSandEverywhere(amount);
 		repaint();
 	}
-	
+
+	public void setToBurningConfig(){
+		sg.setSand(sg.getMinimalBurningConfig());
+		repaint();
+	}
+
+	public void addBurningConfig(){
+		sg.addSand(sg.getMinimalBurningConfig());
+		repaint();
+	}
+
 	public void clearSand() {
 		for(int i = 0; i<vertexData.size(); i++) {
 			vertexData.get(i)[2] = 0;
@@ -775,85 +769,89 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
     
     public void addVertex(int x, int y) {
         sg.addVertex();
-        Integer[] newPos = {x,y,0};
+        Integer[] newPos = {unscaleCoordinate(x),unscaleCoordinate(y),0};
         vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
         repaint();
     }
+
+	private void addVertexUnscaled(int x, int y){
+		sg.addVertex();
+        Integer[] newPos = {x,y,0};
+        vertexData.add(newPos);
+		edges.add(new HashSet<Integer>());
+        repaint();
+	}
 	
 	public void delVertex(int v) {
 		vertexData.remove(v);
 		sg.removeVertex(v);
+		edges.remove(v);
 		for(int i = 0; i<edges.size(); i++){
-			if( (edges.get(i)[0] == v) || (edges.get(i)[1] == v)){
-				edges.remove(i);
-				i--;
-			}			
-		}
-		for(int i = 0; i<edges.size(); i++){
-			if(edges.get(i)[0]>v){
-				edges.get(i)[0]--;
+			edges.get(i).remove(v);
+			Set<Integer> updatedOutVerts = new HashSet<Integer>();
+			for(Iterator<Integer> iter = edges.get(i).iterator(); iter.hasNext(); ){
+				int u = iter.next();
+				if(u>v){
+					iter.remove();
+					updatedOutVerts.add(u-1);
+				}
 			}
-			if(edges.get(i)[1]>v){
-				edges.get(i)[1]--;
-			}
-			
+			edges.get(i).addAll(updatedOutVerts);
 		}
 	}
-	
-	void addEdge(int originVert, int destVert) {
+
+	public void delAllVertices() {
+		vertexData.clear();
+		edges.clear();
+		sg.removeAllVertices();
+		repaint();
+	}
+
+	public void addEdge(int originVert, int destVert) {
         addEdge(originVert, destVert, 1);
     }
 	
     public void addEdge(int originVert, int destVert, int weight) {
-        sg.addEdge(originVert,destVert, weight);
-        
-        for(Integer[] e : edges) {
-            if( e[0] == originVert && e[1] == destVert) {
-                e[2]+=weight;
-                return;
-            }
-        }
-		Integer[] newEdge = {originVert, destVert, weight};
-        edges.add(newEdge);
-        repaint();
+        edges.get(originVert).add(destVert);
+		sg.addEdge(originVert,destVert,weight);
     }
 	
 	public void delEdge(int originVert, int destVert) {
-		for(int i =0; i<edges.size(); i++) {
-			if(edges.get(i)[0] == originVert && edges.get(i)[1] == destVert){
-				sg.removeEdge(originVert, destVert);
-				edges.get(i)[2]--;
-				if(edges.get(i)[2]<1)
-					edges.remove(i);
-				return;
-			}
-		}
+		this.delEdge(originVert, destVert, 1);
 	}
 	
 	public void delEdge(int originVert, int destVert, int weight) {
-		for(int i =0; i<edges.size(); i++) {
-			if(edges.get(i)[0] == originVert && edges.get(i)[1] == destVert){
-				sg.removeEdge(originVert, destVert,weight);
-				edges.get(i)[2]-=weight;
-				if(edges.get(i)[2]<1)
-					edges.remove(i);
-				return;
-			}
-		}
+		sg.removeEdge(originVert, destVert, weight);
+		if(sg.weight(originVert,destVert)==0)
+			edges.get(originVert).remove(destVert);
 	}
     
     public void addSand(int vert, int amount) {
         sg.addSand(vert,amount);
         vertexData.get(vert)[2]+=amount;
     }
+
+	public void setSand(int vert, int amount){
+		sg.setSand(vert, amount);
+		vertexData.get(vert)[2]=amount;
+	}
     
     private int touchingVertex(int x, int y) {
         for( int i = 0; i<vertexData.size(); i++ ) {
             Integer[] v = vertexData.get(i);
-            if(Math.sqrt((x-v[0])*(x-v[0]) + (y-v[1])*(y-v[1]))<=VERT_RADIUS) {
+            if(Math.sqrt((x-scaleCoordinate(v[0]))*(x-scaleCoordinate(v[0])) + (y-scaleCoordinate(v[1]))*(y-scaleCoordinate(v[1])))<=VERT_RADIUS) {
                 return i;
             }
         }
         return -1;
     }
+
+	private int scaleCoordinate(int coord){
+		return (int)Math.ceil(coord*scale);
+	}
+
+	private int unscaleCoordinate(int coord){
+		return (int) ((double)coord/scale);
+	}
 }

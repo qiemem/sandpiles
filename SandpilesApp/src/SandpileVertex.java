@@ -6,23 +6,28 @@
 //  Copyright 2008 Reed College. All rights reserved.
 //
 
-import java.util.Vector;
-import java.util.List;
+import java.util.*;
 
 public class SandpileVertex {
 	private int sand;
-	private Vector<SandpileVertex> outVerts;
+	private HashMap<SandpileVertex,Integer> outVerts;
+	private int degree;
 	
 	public SandpileVertex() {
 		sand = 0;
-		outVerts = new Vector<SandpileVertex>();
+		degree = 0;
+		outVerts = new HashMap<SandpileVertex,Integer>();
 	}
 	
 	/**
 	 * Returns the number of outgoing edges from this vertex.
 	 */
 	public int degree() {
-		return outVerts.size();
+		return degree;
+	}
+
+	public boolean isSink() {
+		return degree==0;
 	}
 	
 	/**
@@ -37,24 +42,33 @@ public class SandpileVertex {
 	 * Adds an outgoing edge to the vertex.
 	 */
 	public void addOutgoingEdge(SandpileVertex destVert) {
-		outVerts.add(destVert);
+		addOutgoingEdge(destVert,1);
 	}
 	
 	/**
-	 * Adds an outgoing edge to the vertex of the specified weight.
-	 * Currently, this just adds [weight] outgoing edges to the vertex.
+	 * Adds an outgoing edge to the vertex of the specified weight. If there is already an
+	 * edge of a particular weight from this vertex to the destination vertex,
+	 * the weight of that edge will be increased by the specified amount. If
+	 * a negative weight is given, the weight will decrease by that amount, removing
+	 * the connection if the weight drops to zero or less.
 	 */
 	public void addOutgoingEdge(SandpileVertex destVert, int weight) {
-		for(int i=0; i<weight; i++) {
-			this.addOutgoingEdge(destVert);
+		if(outVerts.containsKey(destVert)){
+			outVerts.put(destVert, weight(destVert)+weight);
+		}else{
+			outVerts.put(destVert, weight);
+		}
+		degree+=weight;
+		if(weight(destVert)<=0){
+			removeVertex(destVert);
 		}
 	}
 	
 	/**
-	 * Retrieves a list of the vertices which this vertex has outgoing edges to.
+	 * Retrieves the set of the vertices which this vertex has outgoing edges to.
 	 */
-	public List<SandpileVertex> getOutgoingVertices() {
-		return outVerts;
+	public Set<SandpileVertex> getOutgoingVertices() {
+		return outVerts.keySet();
 	}
 	
 	/**
@@ -82,10 +96,20 @@ public class SandpileVertex {
 	 * Fires the vertex, even if it is stable.  Could result in negative sand.
 	 */
 	public void fire() {
-		for(SandpileVertex v : this.outVerts) {
-			v.addSand(1);
+		for(SandpileVertex v : this.outVerts.keySet()) {
+			v.addSand(this.outVerts.get(v));
 		}
 		this.sand-=this.degree();
+	}
+
+	/**
+	 * Sucks sand from neighbors equal to what it would give it if it fired.  Could result in neighbors having negative sand.
+	 */
+	public void reverseFire() {
+		for(SandpileVertex v : this.outVerts.keySet()) {
+			v.addSand(-this.outVerts.get(v));
+		}
+		this.addSand(this.degree());
 	}
 	
 	/**
@@ -100,30 +124,30 @@ public class SandpileVertex {
      * Returns the number of edges from this vertex to the given vertex.
      */
     public int weight(SandpileVertex vert) {
-		int wt=0;
-        for( SandpileVertex v : outVerts) {
-			if( v == vert ) {
-				wt++;
-            }
-        }
-        return wt;
+		if(outVerts.containsKey(vert)){
+			return outVerts.get(vert);
+		}else{
+			return 0;
+		}
     }
 	
 	/**
 	 * Remove all references to a vertex.
 	 */
 	public void removeVertex(SandpileVertex v) {
-		boolean keepGoing = outVerts.remove(v);
-		while(keepGoing){
-			keepGoing = outVerts.remove(v);
-		}
+		degree-=weight(v);
+		outVerts.remove(v);
 	}
 	
 	/**
 	 * Remove an edges between this vertex and the indicated one.
 	 */
-	public void removeEdge(SandpileVertex v) {
-		outVerts.remove(v);
+	public void removeEdge(SandpileVertex v, int weight) {
+		addOutgoingEdge(v, -weight);
+	}
+
+	public void removeEdge(SandpileVertex v){
+		removeEdge(v,1);
 	}
 	
 

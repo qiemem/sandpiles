@@ -15,6 +15,7 @@
 import javax.swing.Timer;
 import javax.swing.JLabel;
 import java.awt.CardLayout;
+import java.awt.Cursor;
 
 //import java.awt.event.MouseListener;
 
@@ -25,19 +26,12 @@ import java.awt.CardLayout;
 
 
 public class Sandpiles extends javax.swing.JFrame {
-	private static final String ADD_SAND_STATE = "Add Sand";
-	private static final String DEL_SAND_STATE = "Remove Sand";
 	private static final String MAKE_GRID_STATE = "Make Grid";
 	private static final String MAKE_HEX_GRID_STATE = "Make Hex Grid";
-	private static final String ADD_VERTEX_STATE = "Add Vertex";
-	private static final String DEL_VERTEX_STATE = "Delete Vertex";
-	private static final String ADD_EDGE_STATE = "Add Edge";
-	private static final String DEL_EDGE_STATE = "Delete Edge";
-	private static final String ADD_UNDI_EDGE_STATE = "Add Undirected Edge";
-	private static final String DEL_UNDI_EDGE_STATE = "Delete Undirected Edge";
 	private static final String MAKE_HONEYCOMB_STATE = "Make Honeycomb";
 	private static final String CONFIG_MANAGER_STATE = "Config Manager";
 	private static final String VISUAL_OPTIONS_STATE = "Visual Options";
+	private static final String EDIT_GRAPH_STATE = "Edit Graph";
 	
 	//built-in configs
 	private static final String MAX_CONFIG = "Max Stable";
@@ -55,6 +49,20 @@ public class Sandpiles extends javax.swing.JFrame {
     public Sandpiles() {
         initComponents();
         runTimer = new Timer(10,sandpileViewPanel);
+		CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
+		//cl.show(optionsContainerPanel, (String)evt.getItem());
+		String currentState =  (String) controlStateComboBox.getSelectedItem();
+		if(currentState.equals(MAKE_GRID_STATE) || currentState.equals(MAKE_HEX_GRID_STATE)){
+			cl.show(optionsContainerPanel, MAKE_GRID_STATE);
+		}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
+			cl.show(optionsContainerPanel,MAKE_HONEYCOMB_STATE);
+		}else if(currentState.equals(CONFIG_MANAGER_STATE)){
+			cl.show(optionsContainerPanel, CONFIG_MANAGER_STATE);
+		}else if(currentState.equals(VISUAL_OPTIONS_STATE)){
+			cl.show(optionsContainerPanel, VISUAL_OPTIONS_STATE);
+		}else if(currentState.equals(EDIT_GRAPH_STATE)){
+			cl.show(optionsContainerPanel, EDIT_GRAPH_STATE);
+		}
 		//controlStateComboBox.addActionListener((SandpilePanel) sandpileViewPanel);
     }
 
@@ -73,10 +81,6 @@ public class Sandpiles extends javax.swing.JFrame {
         makeHoneycombBorderComboBox = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
         makeHoneycombRadiusField = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
-        addSandOptionsPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        numOfGrainsField = new javax.swing.JTextField();
         makeGridOptionsPanel = new javax.swing.JPanel();
         gridSizeLabel = new javax.swing.JLabel();
         gridRowsField = new javax.swing.JTextField();
@@ -90,27 +94,39 @@ public class Sandpiles extends javax.swing.JFrame {
         eBorderComboBox = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         wBorderComboBox = new javax.swing.JComboBox();
-        addEdgeOptionsPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        weightField = new javax.swing.JTextField();
         blankOptionsPanel = new javax.swing.JPanel();
         configManagerOptionsPanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         configSelectList = new javax.swing.JList();
         addConfigButton = new javax.swing.JButton();
         setConfigButton = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        addSandRadioButton = new javax.swing.JRadioButton();
+        jLabel7 = new javax.swing.JLabel();
+        removeSandRadioButton = new javax.swing.JRadioButton();
+        setSandRadioButton = new javax.swing.JRadioButton();
+        jLabel8 = new javax.swing.JLabel();
+        amountOfSandField = new javax.swing.JTextField();
         visualOptionsPanel = new javax.swing.JPanel();
         repaintCheckBox = new javax.swing.JCheckBox();
         colorCheckBox = new javax.swing.JCheckBox();
         labelsCheckBox = new javax.swing.JCheckBox();
         changingNodeSizeCheckBox = new javax.swing.JCheckBox();
-        jFrame1 = new javax.swing.JFrame();
+        drawEdgesCheckBox = new javax.swing.JCheckBox();
+        editConfigButtonGroup = new javax.swing.ButtonGroup();
+        editGraphPanel = new javax.swing.JPanel();
+        addVertexRadioButton = new javax.swing.JRadioButton();
+        removeVertexRadioButton = new javax.swing.JRadioButton();
+        addEdgeRadioButton = new javax.swing.JRadioButton();
+        removeEdgeRadioButton = new javax.swing.JRadioButton();
+        addUndirectedEdgeRadioButton = new javax.swing.JRadioButton();
+        removeUndirectedEdgeRadioButton = new javax.swing.JRadioButton();
+        edgeWeightField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        editGraphButtonGroup = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        sandpileViewScrollPane = new javax.swing.JScrollPane();
         sandpileViewPanel = new SandpilePanel();
-        jPanel1 = new javax.swing.JPanel();
+        controlPanel = new javax.swing.JPanel();
         runButton = new javax.swing.JToggleButton();
         delaySlider = new javax.swing.JSlider();
         optionsContainerPanel = new javax.swing.JPanel();
@@ -120,6 +136,12 @@ public class Sandpiles extends javax.swing.JFrame {
         quitButton = new javax.swing.JButton();
         delayLabel = new javax.swing.JLabel();
         stepButton = new javax.swing.JButton();
+        deleteGraphButton = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        scaleTextField = new javax.swing.JTextField();
+        scaleSlider = new javax.swing.JSlider();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         jLabel9.setText("Border:");
 
@@ -166,33 +188,6 @@ public class Sandpiles extends javax.swing.JFrame {
                     .add(jLabel9)
                     .add(makeHoneycombBorderComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(197, Short.MAX_VALUE))
-        );
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel1.setText("# of Grains:");
-
-        numOfGrainsField.setText("1");
-        numOfGrainsField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numOfGrainsFieldActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout addSandOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(addSandOptionsPanel);
-        addSandOptionsPanel.setLayout(addSandOptionsPanelLayout);
-        addSandOptionsPanelLayout.setHorizontalGroup(
-            addSandOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(addSandOptionsPanelLayout.createSequentialGroup()
-                .add(jLabel1)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(numOfGrainsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-        addSandOptionsPanelLayout.setVerticalGroup(
-            addSandOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(addSandOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(jLabel1)
-                .add(numOfGrainsField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
 
         gridSizeLabel.setText("Grid Size:");
@@ -311,31 +306,6 @@ public class Sandpiles extends javax.swing.JFrame {
                 .addContainerGap(104, Short.MAX_VALUE))
         );
 
-        jLabel2.setText("Weight:");
-
-        weightField.setText("1");
-        weightField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                weightFieldActionPerformed(evt);
-            }
-        });
-
-        org.jdesktop.layout.GroupLayout addEdgeOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(addEdgeOptionsPanel);
-        addEdgeOptionsPanel.setLayout(addEdgeOptionsPanelLayout);
-        addEdgeOptionsPanelLayout.setHorizontalGroup(
-            addEdgeOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(addEdgeOptionsPanelLayout.createSequentialGroup()
-                .add(jLabel2)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(weightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-        addEdgeOptionsPanelLayout.setVerticalGroup(
-            addEdgeOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(addEdgeOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                .add(jLabel2)
-                .add(weightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        );
-
         org.jdesktop.layout.GroupLayout blankOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(blankOptionsPanel);
         blankOptionsPanel.setLayout(blankOptionsPanelLayout);
         blankOptionsPanelLayout.setHorizontalGroup(
@@ -368,6 +338,22 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
+        editConfigButtonGroup.add(addSandRadioButton);
+        addSandRadioButton.setSelected(true);
+        addSandRadioButton.setText("Add Sand");
+
+        jLabel7.setText("On click:");
+
+        editConfigButtonGroup.add(removeSandRadioButton);
+        removeSandRadioButton.setText("Remove Sand");
+
+        editConfigButtonGroup.add(setSandRadioButton);
+        setSandRadioButton.setText("Set Sand");
+
+        jLabel8.setText("Amount:");
+
+        amountOfSandField.setText("1");
+
         org.jdesktop.layout.GroupLayout configManagerOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(configManagerOptionsPanel);
         configManagerOptionsPanel.setLayout(configManagerOptionsPanelLayout);
         configManagerOptionsPanelLayout.setHorizontalGroup(
@@ -377,6 +363,23 @@ public class Sandpiles extends javax.swing.JFrame {
                 .add(addConfigButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 67, Short.MAX_VALUE)
                 .add(setConfigButton))
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(jLabel7)
+                .addContainerGap())
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(addSandRadioButton)
+                .addContainerGap())
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(setSandRadioButton)
+                    .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                        .add(jLabel8)
+                        .add(18, 18, 18)
+                        .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 42, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(103, Short.MAX_VALUE))
+            .add(configManagerOptionsPanelLayout.createSequentialGroup()
+                .add(removeSandRadioButton)
+                .addContainerGap())
         );
         configManagerOptionsPanelLayout.setVerticalGroup(
             configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -386,12 +389,20 @@ public class Sandpiles extends javax.swing.JFrame {
                 .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(addConfigButton)
                     .add(setConfigButton))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .add(18, 18, 18)
+                .add(jLabel7)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(addSandRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(removeSandRadioButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(setSandRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(configManagerOptionsPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel8)
+                    .add(amountOfSandField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
 
         repaintCheckBox.setSelected(true);
         repaintCheckBox.setText("Repaint");
@@ -409,8 +420,7 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
-        labelsCheckBox.setSelected(true);
-        labelsCheckBox.setText("Labels");
+        labelsCheckBox.setText("Draw Labels");
         labelsCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 labelsCheckBoxActionPerformed(evt);
@@ -425,6 +435,14 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
+        drawEdgesCheckBox.setSelected(true);
+        drawEdgesCheckBox.setText("Draw Edges");
+        drawEdgesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drawEdgesCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout visualOptionsPanelLayout = new org.jdesktop.layout.GroupLayout(visualOptionsPanel);
         visualOptionsPanel.setLayout(visualOptionsPanelLayout);
         visualOptionsPanelLayout.setHorizontalGroup(
@@ -434,7 +452,8 @@ public class Sandpiles extends javax.swing.JFrame {
                     .add(repaintCheckBox)
                     .add(colorCheckBox)
                     .add(labelsCheckBox)
-                    .add(changingNodeSizeCheckBox))
+                    .add(changingNodeSizeCheckBox)
+                    .add(drawEdgesCheckBox))
                 .addContainerGap(42, Short.MAX_VALUE))
         );
         visualOptionsPanelLayout.setVerticalGroup(
@@ -447,33 +466,89 @@ public class Sandpiles extends javax.swing.JFrame {
                 .add(labelsCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(changingNodeSizeCheckBox)
-                .addContainerGap(168, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(drawEdgesCheckBox)
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
-        org.jdesktop.layout.GroupLayout jFrame1Layout = new org.jdesktop.layout.GroupLayout(jFrame1.getContentPane());
-        jFrame1.getContentPane().setLayout(jFrame1Layout);
-        jFrame1Layout.setHorizontalGroup(
-            jFrame1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        editGraphButtonGroup.add(addVertexRadioButton);
+        addVertexRadioButton.setSelected(true);
+        addVertexRadioButton.setText("Add Vertex");
+
+        editGraphButtonGroup.add(removeVertexRadioButton);
+        removeVertexRadioButton.setText("Remove Vertex");
+
+        editGraphButtonGroup.add(addEdgeRadioButton);
+        addEdgeRadioButton.setText("Add Edge");
+
+        editGraphButtonGroup.add(removeEdgeRadioButton);
+        removeEdgeRadioButton.setText("Remove Edge");
+
+        editGraphButtonGroup.add(addUndirectedEdgeRadioButton);
+        addUndirectedEdgeRadioButton.setText("Add Undirected Edge");
+
+        editGraphButtonGroup.add(removeUndirectedEdgeRadioButton);
+        removeUndirectedEdgeRadioButton.setText("Remove Undirected Edge");
+
+        edgeWeightField.setText("1");
+
+        jLabel1.setText("Edge Weight");
+
+        org.jdesktop.layout.GroupLayout editGraphPanelLayout = new org.jdesktop.layout.GroupLayout(editGraphPanel);
+        editGraphPanel.setLayout(editGraphPanelLayout);
+        editGraphPanelLayout.setHorizontalGroup(
+            editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(editGraphPanelLayout.createSequentialGroup()
+                .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(addVertexRadioButton)
+                    .add(removeVertexRadioButton)
+                    .add(addEdgeRadioButton)
+                    .add(removeEdgeRadioButton)
+                    .add(addUndirectedEdgeRadioButton)
+                    .add(removeUndirectedEdgeRadioButton))
+                .addContainerGap(36, Short.MAX_VALUE))
+            .add(editGraphPanelLayout.createSequentialGroup()
+                .add(jLabel1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 27, Short.MAX_VALUE)
+                .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 36, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(83, 83, 83))
         );
-        jFrame1Layout.setVerticalGroup(
-            jFrame1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        editGraphPanelLayout.setVerticalGroup(
+            editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(editGraphPanelLayout.createSequentialGroup()
+                .add(addVertexRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(removeVertexRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(addEdgeRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(removeEdgeRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(addUndirectedEdgeRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(removeUndirectedEdgeRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(editGraphPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(edgeWeightField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel1))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sandpiles");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setName("sandpilesMainFrame"); // NOI18N
+        setName("sandpilesMainFrame");
 
         jSplitPane1.setDividerLocation(600);
         jSplitPane1.setResizeWeight(1.0);
         jSplitPane1.setOneTouchExpandable(true);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        sandpileViewScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        sandpileViewScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         sandpileViewPanel.setBackground(new java.awt.Color(0, 0, 0));
         sandpileViewPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(153, 153, 153), new java.awt.Color(153, 153, 153)));
-        sandpileViewPanel.setFont(new java.awt.Font("Lucida Grande", 0, 12));
+        sandpileViewPanel.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         sandpileViewPanel.setPreferredSize(new java.awt.Dimension(2000, 2000));
         sandpileViewPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -495,9 +570,9 @@ public class Sandpiles extends javax.swing.JFrame {
             .add(0, 1996, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(sandpileViewPanel);
+        sandpileViewScrollPane.setViewportView(sandpileViewPanel);
 
-        jSplitPane1.setLeftComponent(jScrollPane1);
+        jSplitPane1.setLeftComponent(sandpileViewScrollPane);
 
         runButton.setText("Run");
         runButton.addActionListener(new java.awt.event.ActionListener() {
@@ -517,15 +592,16 @@ public class Sandpiles extends javax.swing.JFrame {
 
         optionsContainerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Options"));
         optionsContainerPanel.setLayout(new java.awt.CardLayout());
-        optionsContainerPanel.add(blankOptionsPanel, ADD_VERTEX_STATE);
+        //optionsContainerPanel.add(blankOptionsPanel, ADD_VERTEX_STATE);
         //optionsContainerPanel.add(blankOptionsPanel, DEL_VERTEX_STATE);
         optionsContainerPanel.add(makeGridOptionsPanel, MAKE_GRID_STATE);
-        optionsContainerPanel.add(addSandOptionsPanel, ADD_SAND_STATE);
+        //optionsContainerPanel.add(addSandOptionsPanel, ADD_SAND_STATE);
         //optionsContainerPanel.add(addSandOptionsPanel, DEL_SAND_STATE);
-        optionsContainerPanel.add(addEdgeOptionsPanel, ADD_EDGE_STATE);
+        //optionsContainerPanel.add(addEdgeOptionsPanel, ADD_EDGE_STATE);
         optionsContainerPanel.add(makeHoneycombOptionsPanel, MAKE_HONEYCOMB_STATE);
         optionsContainerPanel.add(configManagerOptionsPanel, CONFIG_MANAGER_STATE);
         optionsContainerPanel.add(visualOptionsPanel, VISUAL_OPTIONS_STATE);
+        optionsContainerPanel.add(editGraphPanel, EDIT_GRAPH_STATE);
         //optionsContainerPanel.add(addEdgeOptionsPanel, DEL_EDGE_STATE);
         //optionsContainerPanel.add(addEdgeOptionsPanel, ADD_UNDI_EDGE_STATE);
         //optionsContainerPanel.add(addEdgeOptionsPanel, DEL_UNDI_EDGE_STATE);
@@ -540,7 +616,7 @@ public class Sandpiles extends javax.swing.JFrame {
         });
 
         controlStateComboBox.setMaximumRowCount(16);
-        controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { ADD_VERTEX_STATE, DEL_VERTEX_STATE, ADD_EDGE_STATE, DEL_EDGE_STATE, ADD_UNDI_EDGE_STATE, DEL_UNDI_EDGE_STATE, ADD_SAND_STATE, DEL_SAND_STATE, CONFIG_MANAGER_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE, MAKE_HONEYCOMB_STATE, VISUAL_OPTIONS_STATE}));
+        controlStateComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { EDIT_GRAPH_STATE, CONFIG_MANAGER_STATE, MAKE_GRID_STATE, MAKE_HEX_GRID_STATE, MAKE_HONEYCOMB_STATE, VISUAL_OPTIONS_STATE}));
         controlStateComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 controlStateComboBoxItemStateChanged(evt);
@@ -580,60 +656,113 @@ public class Sandpiles extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+        deleteGraphButton.setText("Del. Graph");
+        deleteGraphButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteGraphButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Scale:");
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, scaleSlider, org.jdesktop.beansbinding.ELProperty.create("${value}"), scaleTextField, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        scaleSlider.setMaximum(200);
+        scaleSlider.setValue(100);
+        scaleSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                scaleSliderStateChanged(evt);
+            }
+        });
+
+        jLabel11.setText("%  ");
+
+        jLabel12.setText("ms");
+
+        org.jdesktop.layout.GroupLayout controlPanelLayout = new org.jdesktop.layout.GroupLayout(controlPanel);
+        controlPanel.setLayout(controlPanelLayout);
+        controlPanelLayout.setHorizontalGroup(
+            controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(clearSandButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                    .add(jPanel1Layout.createSequentialGroup()
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(24, 24, 24)
-                                .add(delayLabel))
-                            .add(runButton))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 94, Short.MAX_VALUE)
-                        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jPanel1Layout.createSequentialGroup()
-                                .add(delayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 62, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(13, 13, 13))
-                            .add(stepButton)))
-                    .add(delaySlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
-                    .add(controlStateComboBox, 0, 244, Short.MAX_VALUE))
+                .add(controlStateComboBox, 0, 244, Short.MAX_VALUE)
                 .addContainerGap())
             .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .add(quitButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                 .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel1Layout.createSequentialGroup()
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, delaySlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                    .add(controlPanelLayout.createSequentialGroup()
+                        .add(24, 24, 24)
+                        .add(jLabel2)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 112, Short.MAX_VALUE)
+                        .add(scaleTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel11))
+                    .add(scaleSlider, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
+                        .add(clearSandButton)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 21, Short.MAX_VALUE)
+                        .add(deleteGraphButton))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
+                        .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(runButton)
+                            .add(controlPanelLayout.createSequentialGroup()
+                                .add(24, 24, 24)
+                                .add(delayLabel)))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 91, Short.MAX_VALUE)
+                        .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
+                                .add(delayTextField)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jLabel12))
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, stepButton))))
+                .addContainerGap())
+        );
+        controlPanelLayout.setVerticalGroup(
+            controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, controlPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(runButton)
                     .add(stepButton))
-                .add(9, 9, 9)
-                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(delayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(delayLabel))
+                .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(controlPanelLayout.createSequentialGroup()
+                        .add(18, 18, 18)
+                        .add(jLabel12))
+                    .add(controlPanelLayout.createSequentialGroup()
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                            .add(delayLabel)
+                            .add(delayTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(delaySlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(clearSandButton)
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel2)
+                    .add(jLabel11)
+                    .add(scaleTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(scaleSlider, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(controlPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(clearSandButton)
+                    .add(deleteGraphButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(controlStateComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                .add(optionsContainerPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(quitButton)
                 .addContainerGap())
         );
 
-        jSplitPane1.setRightComponent(jPanel1);
+        jSplitPane1.setRightComponent(controlPanel);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -663,28 +792,17 @@ private void gridRowsFieldPropertyChange(java.beans.PropertyChangeEvent evt) {//
 // TODO add your handling code here:
 }//GEN-LAST:event_gridRowsFieldPropertyChange
 
-private void numOfGrainsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numOfGrainsFieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_numOfGrainsFieldActionPerformed
-
 private void sandpileViewPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseClicked
 
 }//GEN-LAST:event_sandpileViewPanelMouseClicked
 
-private void weightFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_weightFieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_weightFieldActionPerformed
-
 private void sandpileViewPanelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sandpileViewPanelMouseReleased
+	this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	String currentState = (String) controlStateComboBox.getSelectedItem();
 	int x = evt.getX();
 	int y = evt.getY();
-	if(currentState.equals(ADD_SAND_STATE)) {
-		sandpileViewPanel.addSandControl(x,y, Integer.valueOf(numOfGrainsField.getText() ) );
-	}else if(currentState.equals(DEL_SAND_STATE)){
-		sandpileViewPanel.addSandControl(x,y, -Integer.valueOf(numOfGrainsField.getText() ) );
-	}else if(currentState.equals(MAKE_GRID_STATE)){
-		sandpileViewPanel.makeGrid2(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y, 
+	if(currentState.equals(MAKE_GRID_STATE)){
+		sandpileViewPanel.makeGrid(Integer.valueOf(gridRowsField.getText()), Integer.valueOf(gridColsField.getText()), x, y, 
 				nBorderComboBox.getSelectedIndex(), 
 				sBorderComboBox.getSelectedIndex(), 
 				eBorderComboBox.getSelectedIndex(), 
@@ -695,21 +813,33 @@ private void sandpileViewPanelMouseReleased(java.awt.event.MouseEvent evt) {//GE
 				sBorderComboBox.getSelectedIndex(), 
 				eBorderComboBox.getSelectedIndex(), 
 				wBorderComboBox.getSelectedIndex());
-	}else if(currentState.equals(ADD_EDGE_STATE)) {
-		sandpileViewPanel.addEdgeControl(x, y, Integer.valueOf(weightField.getText()));
-	}else if(currentState.equals(DEL_EDGE_STATE)) {
-		sandpileViewPanel.delEdgeControl(x, y, Integer.valueOf(weightField.getText()));
-	}else if(currentState.equals(ADD_UNDI_EDGE_STATE)) {
-		sandpileViewPanel.addUndiEdgeControl(x, y, Integer.valueOf(weightField.getText()));
-	}else if(currentState.equals(DEL_UNDI_EDGE_STATE)) {
-		sandpileViewPanel.delUndiEdgeControl(x, y, Integer.valueOf(weightField.getText()));
-	}else if(currentState.equals(ADD_VERTEX_STATE)) {
-		sandpileViewPanel.addVertexControl(x, y);
-	}else if(currentState.equals(DEL_VERTEX_STATE)) {
-		sandpileViewPanel.delVertexControl(x, y);
+	}else if(currentState.equals(EDIT_GRAPH_STATE)) {
+		if(editGraphButtonGroup.isSelected(addVertexRadioButton.getModel())){
+			sandpileViewPanel.addVertexControl(x,y);
+		}else if(editGraphButtonGroup.isSelected(removeVertexRadioButton.getModel())){
+			sandpileViewPanel.delVertexControl(x, y);
+		}else if(editGraphButtonGroup.isSelected(addEdgeRadioButton.getModel())){
+			sandpileViewPanel.addEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+		}else if(editGraphButtonGroup.isSelected(removeEdgeRadioButton.getModel())){
+			sandpileViewPanel.delEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+		}else if(editGraphButtonGroup.isSelected(addUndirectedEdgeRadioButton.getModel())){
+			sandpileViewPanel.addUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+		}else if(editGraphButtonGroup.isSelected(removeUndirectedEdgeRadioButton.getModel())){
+			sandpileViewPanel.delUndiEdgeControl(x, y, Integer.valueOf(edgeWeightField.getText()));
+		}
+
 	}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
 		sandpileViewPanel.makeHoneycomb(Integer.valueOf(makeHoneycombRadiusField.getText()),x, y,  makeHoneycombBorderComboBox.getSelectedIndex());
+	}else if(currentState.equals(CONFIG_MANAGER_STATE)){
+		if(editConfigButtonGroup.isSelected(addSandRadioButton.getModel())){
+			sandpileViewPanel.addSandControl(x,y, Integer.valueOf(amountOfSandField.getText() ) );
+		}else if(editConfigButtonGroup.isSelected(removeSandRadioButton.getModel())){
+			sandpileViewPanel.addSandControl(x,y, -Integer.valueOf(amountOfSandField.getText()));
+		}else if(editConfigButtonGroup.isSelected(setSandRadioButton.getModel())){
+			sandpileViewPanel.setSandControl(x,y, Integer.valueOf(amountOfSandField.getText()));
+		}
 	}
+	this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_sandpileViewPanelMouseReleased
 
 private void nBorderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nBorderComboBoxActionPerformed
@@ -749,6 +879,7 @@ private void makeHoneycombRadiusFieldActionPerformed(java.awt.event.ActionEvent 
 }//GEN-LAST:event_makeHoneycombRadiusFieldActionPerformed
 
 private void addConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addConfigButtonActionPerformed
+	this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	String selection = (String)configSelectList.getSelectedValue();
 	if(selection.equals(MAX_CONFIG)){
 		sandpileViewPanel.addMaxStableConfig();
@@ -758,7 +889,10 @@ private void addConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//G
 		sandpileViewPanel.addSandEverywhere(1);
 	}else if(selection.equals(IDENTITY_CONFIG)){
 		sandpileViewPanel.addIdentity();
+	}else if(selection.equals(BURNING_CONFIG)){
+		sandpileViewPanel.addBurningConfig();
 	}
+	this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 }//GEN-LAST:event_addConfigButtonActionPerformed
 
 private void setConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setConfigButtonActionPerformed
@@ -771,6 +905,8 @@ private void setConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//G
 		sandpileViewPanel.setSandEverywhere(1);
 	}else if(selection.equals(IDENTITY_CONFIG)){
 		sandpileViewPanel.setToIdentity();
+	}else if(selection.equals(BURNING_CONFIG)){
+		sandpileViewPanel.setToBurningConfig();
 	}
 }//GEN-LAST:event_setConfigButtonActionPerformed
 
@@ -783,7 +919,7 @@ sandpileViewPanel.update();
 }//GEN-LAST:event_stepButtonActionPerformed
 
 private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
-System.exit(0);
+	System.exit(0);
 }//GEN-LAST:event_quitButtonActionPerformed
 
 private void clearSandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSandButtonActionPerformed
@@ -795,23 +931,19 @@ sandpileViewPanel.setControlState(controlStateComboBox.getSelectedIndex());
 }//GEN-LAST:event_controlStateComboBoxActionPerformed
 
 private void controlStateComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_controlStateComboBoxItemStateChanged
-String currentState = (String)evt.getItem();
+	String currentState = (String)evt.getItem();
 	CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
 	//cl.show(optionsContainerPanel, (String)evt.getItem());
-	if(currentState.equals(ADD_SAND_STATE)||currentState.equals(DEL_SAND_STATE)) {
-		cl.show(optionsContainerPanel, ADD_SAND_STATE);
-	}else if(currentState.equals(MAKE_GRID_STATE) || currentState.equals(MAKE_HEX_GRID_STATE)){
+	if(currentState.equals(MAKE_GRID_STATE) || currentState.equals(MAKE_HEX_GRID_STATE)){
 		cl.show(optionsContainerPanel, MAKE_GRID_STATE);
-	}else if(currentState.equals(ADD_EDGE_STATE)||currentState.equals(DEL_EDGE_STATE)||currentState.equals(ADD_UNDI_EDGE_STATE)|| currentState.equals(DEL_UNDI_EDGE_STATE)) {
-		cl.show(optionsContainerPanel, ADD_EDGE_STATE);	
-	}else if(currentState.equals(ADD_VERTEX_STATE) || currentState.equals(DEL_VERTEX_STATE) ) {
-		cl.show(optionsContainerPanel, ADD_VERTEX_STATE);	
 	}else if(currentState.equals(MAKE_HONEYCOMB_STATE)){
 		cl.show(optionsContainerPanel,MAKE_HONEYCOMB_STATE);
 	}else if(currentState.equals(CONFIG_MANAGER_STATE)){
 		cl.show(optionsContainerPanel, CONFIG_MANAGER_STATE);
 	}else if(currentState.equals(VISUAL_OPTIONS_STATE)){
 		cl.show(optionsContainerPanel, VISUAL_OPTIONS_STATE);
+	}else if(currentState.equals(EDIT_GRAPH_STATE)){
+		cl.show(optionsContainerPanel, EDIT_GRAPH_STATE);
 	}
 }//GEN-LAST:event_controlStateComboBoxItemStateChanged
 
@@ -820,7 +952,7 @@ private void delayTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_delayTextFieldActionPerformed
 
 private void delaySliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySliderStateChanged
-runTimer.setDelay(delaySlider.getValue());
+	runTimer.setDelay(delaySlider.getValue());
 }//GEN-LAST:event_delaySliderStateChanged
 
 private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
@@ -836,6 +968,23 @@ private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent 
 	sandpileViewPanel.setChangingNodeSize(changingNodeSizeCheckBox.isSelected());
 }//GEN-LAST:event_changingNodeSizeCheckBoxActionPerformed
 
+private void deleteGraphButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteGraphButtonActionPerformed
+	sandpileViewPanel.delAllVertices();
+}//GEN-LAST:event_deleteGraphButtonActionPerformed
+
+private void scaleSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_scaleSliderStateChanged
+	double scale = (double)scaleSlider.getValue()/100.0;
+	sandpileViewPanel.setScale(scale);
+	//sandpileViewScrollPane.
+	//sandpileViewScrollPane.setLocation((int)(sandpileViewScrollPane.getX()*scale) , (int)(sandpileViewScrollPane.getY()*scale));
+	//sandpileViewPanel.setPreferredSize(new java.awt.Dimension((int)(sandpileViewPanel.getPreferredSize().getWidth()*scale), (int)(sandpileViewPanel.getPreferredSize().getWidth()*scale)));
+	//sandpileViewScrollPane.repaint();
+}//GEN-LAST:event_scaleSliderStateChanged
+
+private void drawEdgesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawEdgesCheckBoxActionPerformed
+	sandpileViewPanel.setDrawEdges(drawEdgesCheckBox.isSelected());
+}//GEN-LAST:event_drawEdgesCheckBoxActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -850,57 +999,71 @@ private void changingNodeSizeCheckBoxActionPerformed(java.awt.event.ActionEvent 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConfigButton;
-    private javax.swing.JPanel addEdgeOptionsPanel;
-    private javax.swing.JPanel addSandOptionsPanel;
+    private javax.swing.JRadioButton addEdgeRadioButton;
+    private javax.swing.JRadioButton addSandRadioButton;
+    private javax.swing.JRadioButton addUndirectedEdgeRadioButton;
+    private javax.swing.JRadioButton addVertexRadioButton;
+    private javax.swing.JTextField amountOfSandField;
     private javax.swing.JPanel blankOptionsPanel;
     private javax.swing.JCheckBox changingNodeSizeCheckBox;
     private javax.swing.JButton clearSandButton;
     private javax.swing.JCheckBox colorCheckBox;
     private javax.swing.JPanel configManagerOptionsPanel;
     private javax.swing.JList configSelectList;
+    private javax.swing.JPanel controlPanel;
     private javax.swing.JComboBox controlStateComboBox;
     private javax.swing.JLabel delayLabel;
     private javax.swing.JSlider delaySlider;
     private javax.swing.JTextField delayTextField;
+    private javax.swing.JButton deleteGraphButton;
+    private javax.swing.JCheckBox drawEdgesCheckBox;
     private javax.swing.JComboBox eBorderComboBox;
+    private javax.swing.JTextField edgeWeightField;
+    private javax.swing.ButtonGroup editConfigButtonGroup;
+    private javax.swing.ButtonGroup editGraphButtonGroup;
+    private javax.swing.JPanel editGraphPanel;
     private javax.swing.JTextField gridColsField;
     private javax.swing.JTextField gridRowsField;
     private javax.swing.JLabel gridSizeCrossLabel;
     private javax.swing.JLabel gridSizeLabel;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JFrame jFrame1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JCheckBox labelsCheckBox;
     private javax.swing.JPanel makeGridOptionsPanel;
     private javax.swing.JComboBox makeHoneycombBorderComboBox;
     private javax.swing.JPanel makeHoneycombOptionsPanel;
     private javax.swing.JTextField makeHoneycombRadiusField;
     private javax.swing.JComboBox nBorderComboBox;
-    private javax.swing.JTextField numOfGrainsField;
     private javax.swing.JPanel optionsContainerPanel;
     private javax.swing.JButton quitButton;
+    private javax.swing.JRadioButton removeEdgeRadioButton;
+    private javax.swing.JRadioButton removeSandRadioButton;
+    private javax.swing.JRadioButton removeUndirectedEdgeRadioButton;
+    private javax.swing.JRadioButton removeVertexRadioButton;
     private javax.swing.JCheckBox repaintCheckBox;
     private javax.swing.JToggleButton runButton;
     private javax.swing.JComboBox sBorderComboBox;
     private SandpilePanel sandpileViewPanel;
+    private javax.swing.JScrollPane sandpileViewScrollPane;
+    private javax.swing.JSlider scaleSlider;
+    private javax.swing.JTextField scaleTextField;
     private javax.swing.JButton setConfigButton;
+    private javax.swing.JRadioButton setSandRadioButton;
     private javax.swing.JButton stepButton;
     private javax.swing.JPanel visualOptionsPanel;
     private javax.swing.JComboBox wBorderComboBox;
-    private javax.swing.JTextField weightField;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
