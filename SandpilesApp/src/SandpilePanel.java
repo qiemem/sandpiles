@@ -18,7 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 //import java.lang.Math;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Iterator;
+
 
 public class SandpilePanel extends JPanel implements ActionListener, Serializable{
 	public static final int ADD_VERT_STATE = 0;
@@ -76,32 +80,7 @@ public class SandpilePanel extends JPanel implements ActionListener, Serializabl
         
         selectedVertex = -1;
         addMouseListener(new MouseInputAdapter() {
-            public void mouseReleased(MouseEvent evt) {/*
-                System.out.println("Got mouse click");
-                int x = evt.getX();
-                int y = evt.getY();
-                int touchVert = touchingVertex(x,y);
-                if(touchVert<0){
-                    if(selectedVertex>=0) {
-                        selectedVertex = -1;
-                    }else{
-                        addVertex(x,y);
-                    }
-                }else{
-                    if(selectedVertex<0) {
-                        selectedVertex = touchVert;
-                    } else {
-                        if(touchVert==selectedVertex) {
-                            if(evt.getButton() == MouseEvent.BUTTON1) {
-                                addSand(selectedVertex, 1);
-                            }else if(evt.getButton() == MouseEvent.BUTTON3){
-                                addSand(selectedVertex, -1);
-                            }
-                        }else{
-                            addEdge(selectedVertex,touchVert);
-                        }
-                    }
-                }*/
+            public void mouseReleased(MouseEvent evt) {
 				
 				int x = evt.getX();
                 int y = evt.getY();

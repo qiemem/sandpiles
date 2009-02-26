@@ -6,7 +6,10 @@
 //  Copyright 2008 Reed College. All rights reserved.
 //
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 public class SandpileGraph {
 	private ArrayList<SandpileVertex> vertices;

@@ -44,9 +44,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Border:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Border:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="makeHoneycombBorderComboBox">
@@ -64,16 +62,12 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Radius:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Radius:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="makeHoneycombRadiusField">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="5"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="5" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="makeHoneycombRadiusFieldActionPerformed"/>
@@ -156,16 +150,12 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="gridSizeLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Grid Size:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Grid Size:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="gridRowsField">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="5"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="5" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gridRowsFieldActionPerformed"/>
@@ -174,16 +164,12 @@
         </Component>
         <Component class="javax.swing.JLabel" name="gridSizeCrossLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="X"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="X" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="gridColsField">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="5"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="5" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gridColsFieldActionPerformed"/>
@@ -191,9 +177,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="N Border:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="N Border:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="nBorderComboBox">
@@ -212,9 +196,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="S Border:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="S Border:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="sBorderComboBox">
@@ -233,9 +215,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="E Border:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="E Border:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="eBorderComboBox">
@@ -254,9 +234,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="W Border:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="W Border:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="wBorderComboBox">
@@ -372,9 +350,7 @@
         </Container>
         <Component class="javax.swing.JButton" name="addConfigButton">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Add"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Add" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addConfigButtonActionPerformed"/>
@@ -382,9 +358,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="setConfigButton">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Set"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Set" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setConfigButtonActionPerformed"/>
@@ -396,16 +370,12 @@
               <ComponentRef name="editConfigButtonGroup"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Add Sand"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Add Sand" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="On click:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="On click:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="removeSandRadioButton">
@@ -413,9 +383,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editConfigButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Remove Sand"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Remove Sand" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="setSandRadioButton">
@@ -423,23 +391,17 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editConfigButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Set Sand"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Set Sand" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Amount:"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Amount:" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="amountOfSandField">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="1"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="1" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -482,9 +444,7 @@
         <Component class="javax.swing.JCheckBox" name="repaintCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Repaint"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Repaint" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repaintCheckBoxActionPerformed"/>
@@ -493,9 +453,7 @@
         <Component class="javax.swing.JCheckBox" name="colorCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Color"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Color" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="colorCheckBoxActionPerformed"/>
@@ -503,9 +461,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="labelsCheckBox">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Draw Labels"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Draw Labels" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="labelsCheckBoxActionPerformed"/>
@@ -514,9 +470,7 @@
         <Component class="javax.swing.JCheckBox" name="changingNodeSizeCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Changing Node Size"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Changing Node Size" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changingNodeSizeCheckBoxActionPerformed"/>
@@ -525,9 +479,7 @@
         <Component class="javax.swing.JCheckBox" name="drawEdgesCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Draw Edges"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Draw Edges" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawEdgesCheckBoxActionPerformed"/>
@@ -592,9 +544,7 @@
               <ComponentRef name="editGraphButtonGroup"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Add Vertex"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Add Vertex" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="removeVertexRadioButton">
@@ -602,9 +552,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editGraphButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Remove Vertex"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Remove Vertex" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="addEdgeRadioButton">
@@ -612,9 +560,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editGraphButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Add Edge"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Add Edge" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="removeEdgeRadioButton">
@@ -622,9 +568,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editGraphButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Remove Edge"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Remove Edge" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="addUndirectedEdgeRadioButton">
@@ -632,9 +576,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editGraphButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Add Undirected Edge"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Add Undirected Edge" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="removeUndirectedEdgeRadioButton">
@@ -642,23 +584,17 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="editGraphButtonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Remove Undirected Edge"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Remove Undirected Edge" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="edgeWeightField">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="1"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="1" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <PlainString value="Edge Weight"/>
-            </Property>
+            <Property name="text" type="java.lang.String" value="Edge Weight" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -668,15 +604,11 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-      <PlainString value="Sandpiles"/>
-    </Property>
+    <Property name="title" type="java.lang.String" value="Sandpiles" noResource="true"/>
     <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
       <Color id="Default Cursor"/>
     </Property>
-    <Property name="name" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-      <PlainString value="sandpilesMainFrame"/>
-    </Property>
+    <Property name="name" type="java.lang.String" value="sandpilesMainFrame" noResource="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -796,7 +728,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="24" pref="24" max="24" attributes="0"/>
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="112" max="32767" attributes="0"/>
+                              <EmptySpace pref="116" max="32767" attributes="0"/>
                               <Component id="scaleTextField" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
@@ -838,17 +770,12 @@
                           <Component id="runButton" min="-2" max="-2" attributes="0"/>
                           <Component id="stepButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="delayLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="delayTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                          <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                              <Component id="delayLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="delayTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -880,9 +807,7 @@
           <SubComponents>
             <Component class="javax.swing.JToggleButton" name="runButton">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Run"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Run" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="runButtonActionPerformed"/>
@@ -891,9 +816,7 @@
             <Component class="javax.swing.JSlider" name="delaySlider">
               <Properties>
                 <Property name="maximum" type="int" value="1000"/>
-                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Adjusts the number of milliseconds between each update."/>
-                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Adjusts the number of milliseconds between each update." noResource="true"/>
                 <Property name="value" type="int" value="100"/>
               </Properties>
               <Events>
@@ -938,9 +861,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="clearSandButton">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Clear Sand"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Clear Sand" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearSandButtonActionPerformed"/>
@@ -948,9 +869,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="quitButton">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Quit"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Quit" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quitButtonActionPerformed"/>
@@ -958,16 +877,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="delayLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Delay:"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Delay:" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="stepButton">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Step"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Step" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stepButtonActionPerformed"/>
@@ -976,9 +891,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="deleteGraphButton">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Del. Graph"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Del. Graph" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteGraphButtonActionPerformed"/>
@@ -986,9 +899,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="Scale:"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="Scale:" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="scaleTextField">
@@ -1009,16 +920,12 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="%  "/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="%  " noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <PlainString value="ms"/>
-                </Property>
+                <Property name="text" type="java.lang.String" value="ms" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>

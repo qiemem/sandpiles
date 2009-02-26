@@ -13,7 +13,7 @@
 
 
 import javax.swing.Timer;
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 

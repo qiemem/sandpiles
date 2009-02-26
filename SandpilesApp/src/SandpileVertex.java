@@ -6,7 +6,8 @@
 //  Copyright 2008 Reed College. All rights reserved.
 //
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 public class SandpileVertex {
 	private int sand;
