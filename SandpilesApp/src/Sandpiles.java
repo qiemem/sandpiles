@@ -49,6 +49,7 @@ public class Sandpiles extends javax.swing.JFrame {
     public Sandpiles() {
         initComponents();
         runTimer = new Timer(10,sandpileViewPanel);
+		runTimer.setDelay(delaySlider.getValue());
 		CardLayout cl = (CardLayout)(optionsContainerPanel.getLayout());
 		//cl.show(optionsContainerPanel, (String)evt.getItem());
 		String currentState =  (String) controlStateComboBox.getSelectedItem();
